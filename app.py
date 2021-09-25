@@ -1,47 +1,56 @@
-import os
-from flask import Flask
+from os import environ
+from flask import Flask, request
+from models.Users import Users
 from flask.json import jsonify
-import stripe
-
+from models.main import connect_db, db
+from sqlalchemy.exc import IntegrityError
+from jsonschema import validate, ValidationError, SchemaError
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
+import json
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'its_a_secret')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///groupypay')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
-stripe.api_key = 'sk_test_51JcbCnEZzJXhLfiIMZpV7PrwHj2Os7rNTNq1jR8h3WPcOTBuKfE5pjzKsYEC2uyEaPXzmi8jVjZ0Yg46E94Y7wKP00OCM2bRPi'
 
-@app.route("/")
+app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = environ.get('SECRET_KEY', 'its_a_secret')
+app.config["JWT_SECRET_KEY"] = environ.get("JWT_SECRET_KEY", "secret-af")
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL', 'postgresql:///groupypay')
+
+jwt = JWTManager(app)
+
+connect_db(app)
+db.create_all()
+
+with open("./json_schemas/user_schema.json", "r") as js:
+    user_schema = json.load(js)
+@app.get("/")
 def home():
-    account_one = stripe.Account.create(
-    type="express",
-    country="US",
-    email="jenny.rosen@example.com",
-    capabilities={
-        "card_payments": {"requested": True},
-        "transfers": {"requested": True},
-    },)
-    account_two = stripe.Account.create(
-    type="express",
-    country="US",
-    email="jenny.rosen@example.com",
-    capabilities={
-        "card_payments": {"requested": True},
-        "transfers": {"requested": True},
-    },)
-    account_links = stripe.AccountLink.create(
-      account=account_one.id,
-      refresh_url='https://localhost:5000/reauth',
-      return_url='https://localhost:5000/',
-      type='account_onboarding',
-    )
-    payment = stripe.PaymentIntent.create(
-      amount=12,
-      currency='usd',
-      application_fee_amount=10,
-      payment_method_types=['card'],
-      on_behalf_of=f'{account_one.id}',
-      transfer_data={
-        'destination': f'{account_two.id}',
-      },
-    )
-    return jsonify(account_one, account_links, payment)
+    return "NONE"
+
+@app.post("/users")
+def signUp():
+    try:
+        valid_input = validate(request.json, user_schema)
+        return jsonify(valid_input)
+    
+    except (ValidationError, SchemaError) as e:
+        return jsonify(dir(e), str(e.message))
+        
+    user = Users.signUp(
+        first_name=request.json.get("first_name"), 
+        last_name=request.json.get("last_name"), 
+        email=request.json.get("email"), 
+        password=request.json.get("password"), 
+        phone_number=request.json.get("phone_number"))
+
+    try:
+        db.session.commit()
+    except IntegrityError as e:
+        print("EEEEEEEEEEEEEEEE", e)
+        db.session.rollback()
+        [message] = e.orig.args
+        error_code = e.orig.pgcode
+
+        return jsonify(message, error_code), 409
+    print(user)
+    access_token = create_access_token(user.email)
+    return jsonify(access_token=access_token)
