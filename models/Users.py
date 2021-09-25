@@ -1,6 +1,9 @@
+from phonenumbers.phonenumberutil import NumberParseException, format_number
+from sqlalchemy import exc
 from models.main import db
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
+from phone_number_validation import validate_phone_number
 
 bcrypt = Bcrypt()
 
@@ -23,7 +26,7 @@ class Users(db.Model):
     )
 
     email = db.Column(
-        db.String(20),
+        db.String(127),
         nullable=False,
         unique=True
     )
@@ -53,9 +56,22 @@ class Users(db.Model):
         return f'<User id={self.id} email={self.email} first_name={self.first_name} last_name={self.last_name}>'
 
     @classmethod
-    def signUp(cls, first_name, last_name, email, password, phone_number):
+    def sign_up(cls, first_name, last_name, email, password, phone_number=None):
+        # Extra information to be returned, can be empty
+        warning = None
 
+        # Create hashed password from plain text password
         hashed_password = bcrypt.generate_password_hash(password).decode("UTF-8")
+        
+        # Parse and validate phone number if exists, set to false if parsing or validation fails
+        if phone_number:
+            formated_number, msg  = validate_phone_number(phone_number)
+            phone_number = formated_number
+            warning = dict(message=msg, cause="phone_number")
+        else:
+            warning = dict(message="Phone number was not provided, none saved", cause="phone_number")
+
+        # Instantiate a user
         user = cls(
             first_name=first_name, 
             last_name=last_name, 
@@ -63,7 +79,8 @@ class Users(db.Model):
             password=hashed_password, 
             phone_number=phone_number)
 
+        # Add user object to db session
         db.session.add(user)
 
-        return user
+        return user, warning
     
