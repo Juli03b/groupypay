@@ -1,8 +1,6 @@
 from unittest import TestCase
-
-from sqlalchemy.orm import session
-from sqlalchemy.sql.functions import user
-from app import app, connect_db, db, Users
+from app import app, connect_db, db
+from models.Users import Users
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groupypay_test'
 app.config['SQLALCHEMY_ECHO'] = False
