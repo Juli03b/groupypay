@@ -1,13 +1,18 @@
+from flask_jwt_extended import create_access_token
+from app import db
+from models.Users import Users
 from flask import request
+from flask.blueprints import Blueprint
 from flask.json import jsonify
 from json_validation import validate_json
 from sqlalchemy.exc import IntegrityError
-from app import db, create_access_token
-from models.Users import Users
 from phone_number_validation import validate_phone_number
 from email_validator import EmailNotValidError, validate_email
 
-def sign_up(**all): 
+users = Blueprint("users", __name__)
+
+@users.post("/", strict_slashes=False)
+def sign_up(): 
     valid_json, msg = validate_json(request.json, "user_schema")
 
     # Extra information to be returned, can be empty
