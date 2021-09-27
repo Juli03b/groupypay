@@ -1,8 +1,10 @@
+"""Main module for app setup"""
+
 from os import environ
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from models.main import connect_db, db
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
-from user import sign_up
+from user import users
 
 app = Flask(__name__)
 
@@ -17,10 +19,5 @@ jwt = JWTManager(app)
 connect_db(app)
 db.create_all()
 
-@app.get("/")
-def home():
-    return "NONE"
-
-@app.post("/users")
-def _():
-    return sign_up()
+# Register blueprint for /users routes
+app.register_blueprint(users, url_prefix="/users")
