@@ -33,6 +33,6 @@ class User:
             db.session.rollback()
             [message] = e.orig.args
 
-            raise BadRequest(message, "Invalid data", pgcode=e.orig.pgcode)
+            raise BadRequest(message, "Database error", pgcode=e.orig.pgcode)
 
         return cls(user)

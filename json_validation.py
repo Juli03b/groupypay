@@ -1,17 +1,23 @@
+"Module to facilitate json validation"
+
 import json
 from jsonschema import validate, ValidationError
 from exceptions.BadRequest import BadRequest
 
 def get_schema(schema_name: str):
-    with open(f"./json_schemas/{schema_name}.json", "r") as js:
-        schema = json.load(js)
-        
+    """Opens and return json schema. Accepts name of schema"""
+
+    with open(f"./json_schemas/{schema_name}.json", "r", encoding="utf-8") as json_schema:
+        schema = json.load(json_schema)
+
     return schema
 
 def validate_json(json_data, schema_name: str):
+    """Validates json and returns it if valid. Raises error if not valid"""
+
     schema = get_schema(schema_name)
     try:
         validate(json_data, schema)
-    except ValidationError as e:
-        raise BadRequest(e.message, "Invalid data")
+    except ValidationError as error:
+        raise BadRequest(error.message, "Invalid data") from error
     return json_data

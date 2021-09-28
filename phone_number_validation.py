@@ -1,19 +1,23 @@
-from exceptions.BadRequest import BadRequest
+"Module to facilitate phone number validation"
+
 from typing import Tuple
 import phonenumbers
 from phonenumbers.phonenumberutil import NumberParseException
+from exceptions.BadRequest import BadRequest
 
 def validate_phone_number(phone_number: str) -> Tuple:
+    """Validates phone number. If invalid, raises error"""
+
     try:
+        # Parse phone number
         phone_number = phonenumbers.parse(phone_number)
 
+        # Return formated phone number if it's valid
         if phonenumbers.is_valid_number(phone_number):
-            # If number is valid and parsable, format it and return it
-            return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
-        else:
-            raise BadRequest("Phone number is invalid", "phone_number")
-    except NumberParseException as e:
-        error_msg = e.args[0]
 
-        raise BadRequest(error_msg, "phone_number")
-    
+            return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
+    except NumberParseException as error:
+
+        raise BadRequest(error.args[0], "phone_number") from error
+
+    raise BadRequest("Phone number is invalid", "phone_number")

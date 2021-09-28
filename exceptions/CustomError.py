@@ -1,6 +1,6 @@
-
 class CustomError(Exception):
-    # """"""
+    """Implement custom exceptions with this class"""
+
     def __init__(self, message: str, cause: str, status_code: int, **kwargs) -> None:
         self.message = message
         self.cause = cause

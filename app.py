@@ -1,7 +1,9 @@
 """Main module for app setup"""
 
+from exceptions.CustomError import CustomError
+from flask.json import jsonify
 from os import environ
-from flask import Flask, jsonify
+from flask import Flask
 from flask_jwt_extended import JWTManager
 from models.main import connect_db, db
 from blueprints.users import users_blueprint
@@ -17,7 +19,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL', 'postgresql:
 JWTManager(app)
 
 # Connect db with app, create tables
-connect_db(app), db.create_all()
+connect_db(app), db.create_all() # pylint: disable=W0106
 
 # Register blueprint for /users routes
 app.register_blueprint(users_blueprint, url_prefix="/users")
+
+@app.errorhandler(CustomError)
+def error_handler(error):
+    """Error handler for custom requests"""
+    error, status_code = error.formated
+
+    return jsonify(error=error), status_code

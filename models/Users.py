@@ -1,7 +1,6 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
-from phone_number_validation import validate_phone_number
 
 bcrypt = Bcrypt()
 
