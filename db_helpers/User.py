@@ -1,3 +1,4 @@
+from exceptions.BadRequest import BadRequest
 from sqlalchemy.exc import IntegrityError
 from models.Users import Users
 from app import db
@@ -28,7 +29,7 @@ class User:
             db.session.rollback()
             [message] = e.orig.args
 
-            raise Exception(dict(error=dict(message=message, pg_code=e.orig.pgcode)))
+            raise BadRequest(message, pgcode=e.orig.pgcode)
 
         del user.password
 
