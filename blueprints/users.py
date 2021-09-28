@@ -14,11 +14,10 @@ users_blueprint = Blueprint("users", __name__)
 @users_blueprint.post("/", strict_slashes=False)
 def sign_up():
     try:
-        print("EHRER")
         # Check if JSON request is valid, return error and HTTP code accordingly
         validate_json(request.json, "user_schema")
 
-        # Parse and validate phone number if exists. Set to false if parsing or validation fails
+        # Parse and validate phone number if exists
         if phone_number := request.json.get("phone_number"):
             formated_number = validate_phone_number(phone_number)
             request.json["phone_number"] = formated_number
@@ -26,7 +25,8 @@ def sign_up():
         try:
             validate_email(request.json.get("email"))
         except EmailNotValidError as e:
-            return jsonify(error=dict(message=str(e), cause="email")), 400
+            raise BadRequest(message=str(e), cause="email")
+        
         user = User.sign_up(**request.json)
         access_token = create_access_token(user.email)
 
@@ -38,5 +38,3 @@ def sign_up():
     except BadRequest as e:
         error, status_code = e.formated
         return jsonify(error), status_code
-    except Exception as e:
-        print(str(e))
