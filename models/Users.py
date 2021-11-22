@@ -12,13 +12,8 @@ class Users(db.Model):
         primary_key=True, 
         autoincrement=True)
     
-    first_name = db.Column(
-        db.String(20),
-        nullable=False
-    )
-
-    last_name = db.Column(
-        db.String(20),
+    name = db.Column(
+        db.String(55),
         nullable=False
     )
 
@@ -31,11 +26,6 @@ class Users(db.Model):
     password = db.Column(
         db.String(),
         nullable=False
-    )
-
-    api_id = db.Column(
-        db.String(),
-        nullable=True,
     )
 
     phone_number = db.Column(
@@ -53,20 +43,30 @@ class Users(db.Model):
         return f'<User id={self.id} first_name={self.first_name} last_name={self.last_name} email={self.email} phone_number={self.phone_number}>'
 
     @classmethod
-    def sign_up(cls, first_name, last_name, email, password, phone_number=None):
+    def sign_up(cls, first_name: str, last_name: str, email: str, password: str, phone_number: str=None):
+
         # Create hashed password from plain text password
         hashed_password = bcrypt.generate_password_hash(password).decode("UTF-8")
 
         # Instantiate a user
         user = cls(
-            first_name=first_name, 
-            last_name=last_name, 
-            email=email, 
-            password=hashed_password, 
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=hashed_password,
             phone_number=phone_number)
 
         # Add user object to db session
         db.session.add(user)
 
         return user
-    
+
+    @classmethod
+    def sign_in(cls, email: str, password: str):
+        """Sign in class method, returns user"""
+
+        user: Users = cls.query.filter_by(email=email)
+        if not user:
+            verify_password = bcrypt.check_password_hash(user.password, password)
+        
+        
