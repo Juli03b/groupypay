@@ -1,11 +1,12 @@
-import email_validator
+"""Module for User class"""
+
 from exceptions.BadRequest import BadRequest
 from sqlalchemy.exc import IntegrityError
-from models.Users import Users
-from app import db
+from models.Users import Users, db
 
 class User:
     """Class for logic abstraction from views"""
+    
     email = None
     first_name = None
     last_name = None
@@ -19,8 +20,18 @@ class User:
         self.email = user.email
         self.phone_number = user.phone_number
 
+    @staticmethod
+    def get_user_by_id(id: str):
+        """Return a list of all users"""
+        
+        user = Users.query.filter_by(id=id)
+        del user.password
+        
+        return user
+
     @classmethod
     def sign_up(cls, **validated_json):
+        """Sign up with validated json. Creates and returns user, or raises Bad Request error if there's a database error"""
 
         # Create user
         user = Users.sign_up(**validated_json)
@@ -28,11 +39,13 @@ class User:
         # Attempt making entry to db. If failed, return error with message and pg code
         try:
             db.session.commit()
-        except IntegrityError as e:
+        except IntegrityError as error:
 
             db.session.rollback()
-            [message] = e.orig.args
+            [message] = error.orig.args
 
-            raise BadRequest(message, "Database error", pgcode=e.orig.pgcode)
+            raise BadRequest(message, "Database error", pgcode=error.orig.pgcode) from error
 
         return cls(user)
+    
+    
