@@ -4,9 +4,9 @@ from flask_jwt_extended import create_access_token
 from flask import request
 from flask.blueprints import Blueprint
 from flask.json import jsonify
+from email_validator import EmailNotValidError, validate_email
 from json_validation import validate_json
 from phone_number_validation import validate_phone_number
-from email_validator import EmailNotValidError, validate_email
 from db_helpers.User import User
 from exceptions.BadRequest import BadRequest
 
@@ -37,3 +37,11 @@ def sign_up():
         message="Sign up successful",
         warning=warning if not request.json.get("phone_number") else None,
         access_token=access_token), 201
+
+@users_blueprint.get("/<id>", strict_slashes=False)
+def get_user(id):
+    """Get users view. Get user information, admin only"""
+    
+    user = User.get_user_by_id(id)
+    
+    return jsonify(user)
