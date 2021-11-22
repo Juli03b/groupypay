@@ -21,12 +21,12 @@ JWTManager(app)
 # Connect db with app, create tables
 connect_db(app), db.create_all() # pylint: disable=W0106
 
-# Register blueprint for /users routes
+# Register blueprint for users routes
 app.register_blueprint(users_blueprint, url_prefix="/users")
 
 @app.errorhandler(CustomError)
 def error_handler(error):
-    """Error handler for custom requests"""
+    """Error handler for custom errors"""
     error, status_code = error.formated
 
     return jsonify(error=error), status_code
