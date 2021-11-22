@@ -1,5 +1,4 @@
 "Module to facilitate phone number validation"
-
 from typing import Tuple
 import phonenumbers
 from phonenumbers.phonenumberutil import NumberParseException
@@ -11,13 +10,11 @@ def validate_phone_number(phone_number: str) -> Tuple:
     try:
         # Parse phone number
         phone_number = phonenumbers.parse(phone_number)
-
+        
         # Return formated phone number if it's valid
         if phonenumbers.is_valid_number(phone_number):
-
             return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
     except NumberParseException as error:
-
         raise BadRequest(error.args[0], "phone_number") from error
 
     raise BadRequest("Phone number is invalid", "phone_number")
