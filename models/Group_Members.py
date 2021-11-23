@@ -1,7 +1,7 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
 
-class Users(db.Model):
+class Group_Members(db.Model):
     __tablename__ = "group_members"
 
     id = db.Column(
