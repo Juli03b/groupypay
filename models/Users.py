@@ -1,4 +1,4 @@
-from main import db
+from models.main import db
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
 
