@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("..")
+
 from unittest import TestCase
 from app import app, connect_db, db
 from models.Users import Users
@@ -19,8 +23,7 @@ class UserTestCase(TestCase):
         self.user_password = "123TESTING"
         self.user_username = "THISISATEST"
         self.user = Users.sign_up(
-            first_name="TEST",
-            last_name="TESTING",
+            name="TEST TESTING",
             email="test@test.com",
             password=self.user_password, 
             phone_number="+1 213 999 2332"
@@ -51,8 +54,7 @@ class UserTestCase(TestCase):
 
         # Create new user
         new_user = Users.sign_up(
-            first_name="SIR",
-            last_name="TESTING",
+            name="SIR TESTING",
             email="testIT@test.com",
             password=self.user_password, 
             phone_number="+13221239681"
@@ -65,5 +67,5 @@ class UserTestCase(TestCase):
         user_query = Users.query.first()
 
         self.assertEqual(new_user, user_query, "Test that both user instances are the same")
-        self.assertEqual(new_user.password[0:7], "$2b$12$", "Test that password is Bcrypy encrypted")
+        self.assertEqual(new_user.password[0:7], "$2b$12$", "Test that password is Bcrypt encrypted")
         
