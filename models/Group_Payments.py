@@ -1,8 +1,5 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
 
 class Group_Payments(db.Model):
     __tablename__ = "group_payments"
@@ -28,6 +25,5 @@ class Group_Payments(db.Model):
         default=now()
     )
 
-    
     def __repr__(self):
         return f'<Group_Payments id={self.id} group_id={self.group_id} total_amount={self.total_amount} created_on={self.created_on}>'

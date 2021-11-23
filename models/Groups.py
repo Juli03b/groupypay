@@ -1,8 +1,5 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
 
 class Groups(db.Model):
     __tablename__ = "groups"

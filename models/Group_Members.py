@@ -1,8 +1,5 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
 
 class Users(db.Model):
     __tablename__ = "group_members"
@@ -37,6 +34,8 @@ class Users(db.Model):
         db.DateTime(timezone=True),
         default=now()
     )
+
+    members = db.relationship("Member_Payments", backref="group_members", passive_deletes=True)
 
     def __repr__(self):
         return f'<Group_Members id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>'
