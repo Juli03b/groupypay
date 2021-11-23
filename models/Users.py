@@ -40,7 +40,7 @@ class Users(db.Model):
     )
 
     def __repr__(self):
-        return f'<User id={self.id} first_name={self.first_name} last_name={self.last_name} email={self.email} phone_number={self.phone_number}>'
+        return f'<User id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
 
     @classmethod
     def sign_up(cls, first_name: str, last_name: str, email: str, password: str, phone_number: str=None):
