@@ -24,6 +24,8 @@ class Group_Payments(db.Model):
         db.DateTime(timezone=True),
         default=now()
     )
+    
+    payments = db.relationship("Member_Payments", backref="group_payments", passive_deletes=True)
 
     def __repr__(self):
         return f'<Group_Payments id={self.id} group_id={self.group_id} total_amount={self.total_amount} created_on={self.created_on}>'
