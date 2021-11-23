@@ -1,4 +1,4 @@
-from models.main import db
+from main import db
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
 
@@ -43,15 +43,14 @@ class Users(db.Model):
         return f'<User id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
 
     @classmethod
-    def sign_up(cls, first_name: str, last_name: str, email: str, password: str, phone_number: str=None):
+    def sign_up(cls, name: str, email: str, password: str, phone_number: str=None):
 
         # Create hashed password from plain text password
         hashed_password = bcrypt.generate_password_hash(password).decode("UTF-8")
 
         # Instantiate a user
         user = cls(
-            first_name=first_name,
-            last_name=last_name,
+            name=name,
             email=email,
             password=hashed_password,
             phone_number=phone_number)
