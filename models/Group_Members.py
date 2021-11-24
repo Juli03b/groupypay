@@ -10,28 +10,23 @@ class Group_Members(db.Model):
         autoincrement=True,
         unique=True
     )
-    
     group_id = db.Column(
         db.Integer(),
         db.ForeignKey("groups.id", ondelete="CASCADE"),
         primary_key=True
     )
-    
     name = db.Column(
         db.String(55),
         nullable=False
     )
-    
     email = db.Column(
         db.String(127),
         nullable=False
     )
-
     phone_number = db.Column(
         db.String(),
         nullable=True,
     )
-
     added_on = db.Column(
         db.DateTime(timezone=True),
         default=now()
