@@ -37,7 +37,7 @@ class Group_Members(db.Model):
         default=now()
     )
 
-    member_payments = db.relationship("Member_Payments", backref="group_member", passive_deletes=True)
+    payments = db.relationship("Member_Payments", backref="group_member", passive_deletes=True)
 
     def __repr__(self):
         return f'<Group_Members id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>'
