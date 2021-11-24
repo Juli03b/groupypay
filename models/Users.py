@@ -1,14 +1,14 @@
 from models.main import db
+from models.Groups import Groups
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
-
 bcrypt = Bcrypt()
 
 class Users(db.Model):
     __tablename__ = "users"
 
     id = db.Column(
-        db.Integer, 
+        db.Integer(), 
         primary_key=True, 
         autoincrement=True)
     
@@ -38,6 +38,8 @@ class Users(db.Model):
         db.DateTime(timezone=True),
         default=now()
     )
+
+    groups = db.relationship("Groups", backref="users", passive_deletes=True)
 
     def __repr__(self):
         return f'<User id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
