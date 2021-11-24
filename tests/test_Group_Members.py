@@ -17,10 +17,11 @@ connect_db(app)
 
 db.drop_all(), db.create_all()
 
-class GroupsMembersTestCase(TestCase):
+class Groups_MembersTestCase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Create new user and group to add new members to"""
+        Users.query.delete()
         # Create User
         cls.user_password = "123TESTING"
         cls.user_username = "THISISATEST"
@@ -79,5 +80,6 @@ class GroupsMembersTestCase(TestCase):
         """Test that pre-made group has member"""
         
         group = Groups.query.first()
+        
         self.assertEqual(group, self.group)
         self.assertEqual(len(group.members), 1)
