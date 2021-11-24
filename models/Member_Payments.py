@@ -35,8 +35,8 @@ class Member_Payments(db.Model):
     paid = db.Column(
         db.Boolean(),
         default=False,
-        nullable=False
+        nullable=True
     )
     
     def __repr__(self):
-        return f'<Member_Payments id={self.id} group_id={self.group_id} total_amount={self.total_amount} created_on={self.created_on} >'
+        return f'<Member_Payments member_id={self.member_id} group_id={self.group_payment_id} amount={self.amount} created_on={self.created_on} >'
