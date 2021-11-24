@@ -56,7 +56,6 @@ class Groups_MembersTestCase(TestCase):
         # Add member to group
         self.member = Group_Members(
             name="TEEEST",
-            # group_id=self.group_id,
             email="TESTINGTON@TEST.com",
             phone_number="+132312323"
         )
