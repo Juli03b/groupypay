@@ -98,5 +98,5 @@ class Member_PaymentsTestCase(TestCase):
         db.session.commit()
 
     def test_member_payment(self) -> None:
-        """Test that pre-made group can be found"""
+        """Test that pre-made member payment can be found"""
         self.assertTrue(self.member_payment)
