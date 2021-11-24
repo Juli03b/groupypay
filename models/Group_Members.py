@@ -5,13 +5,15 @@ class Group_Members(db.Model):
     __tablename__ = "group_members"
 
     id = db.Column(
-        db.Integer, 
+        db.Integer(), 
         primary_key=True, 
-        autoincrement=True)
+        autoincrement=True,
+        unique=True
+    )
     
     group_id = db.Column(
-        db.Integer,
-        db.ForeignKey("group.id", ondelete="CASCADE"),
+        db.Integer(),
+        db.ForeignKey("groups.id", ondelete="CASCADE"),
         primary_key=True
     )
     
@@ -35,7 +37,7 @@ class Group_Members(db.Model):
         default=now()
     )
 
-    members = db.relationship("Member_Payments", backref="group_members", passive_deletes=True)
+    member_payments = db.relationship("Member_Payments", backref="group_member", passive_deletes=True)
 
     def __repr__(self):
         return f'<Group_Members id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>'
