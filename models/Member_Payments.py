@@ -1,17 +1,18 @@
 from models.main import db
 from sqlalchemy.sql.functions import now
+from models.Group_Members import Group_Members
 
 class Member_Payments(db.Model):
-    __tablename__ = "group_payments"
+    __tablename__ = "member_payments"
 
     member_id = db.Column(
-        db.Integer,
+        db.Integer(),
         db.ForeignKey("group_members.id", ondelete="CASCADE"),
         primary_key=True
     )
     
     group_payment_id = db.Column(
-        db.Integer,
+        db.Integer(),
         db.ForeignKey("group_payments.id", ondelete="CASCADE"),
         primary_key=True
     )
@@ -32,7 +33,7 @@ class Member_Payments(db.Model):
     )
     
     paid = db.Column(
-        db.Boolean,
+        db.Boolean(),
         default=False,
         nullable=False
     )
