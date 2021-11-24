@@ -10,16 +10,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groupypay_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
 connect_db(app)
+db.drop_all(), db.create_all()
 
-db.drop_all()
-db.create_all()
-
-class UserTestCase(TestCase):
+class UsersTestCase(TestCase):
     def setUp(self) -> None:
         """Empty Users table and create a new user"""
-        Users.query.delete()
-        db.session.commit()
-        
+        self.empty_table()
         self.user_password = "123TESTING"
         self.user_username = "THISISATEST"
         self.user = Users.sign_up(
@@ -35,10 +31,11 @@ class UserTestCase(TestCase):
         self.user_id = self.user.id
     
     def tearDown(self) -> None:
+        self.empty_table()
         db.session.rollback()
 
     def empty_table(self) -> None:
-        """Function to empty Users table"""
+        """Empty Users table"""
         Users.query.delete()
         db.session.commit()
 
