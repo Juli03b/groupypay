@@ -6,8 +6,13 @@
 # Routes  
 
 ## Auth
-    - POST /auth/token:  { username, password } => { token }
-    - POST /auth/sign-up: { name, email, password, phone_number } => { token }
+    POST /auth/token
+    -> { username, password }
+    => { token }
+
+    POST /auth/sign-up
+    -> { name, email, password, phone_number }
+    => { token }
 
 ## Users
 ###### /users/<id>
