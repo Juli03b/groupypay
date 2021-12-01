@@ -1,84 +1,60 @@
-"""Unit test for User class methods"""
+"""Unit test for User class"""
 
 import sys
 
-sys.path.extend(["../.."])
+sys.path.append("../..")
 
-from unittest import TestCase
-from app import app, connect_db, db
 from models.Users import Users
 from models.Groups import Groups
-from models.Group_Members import Group_Members
+from unittest import TestCase
+from app import app, connect_db, db
+from db_helpers.User import User
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groupypay_test'
 app.config['SQLALCHEMY_ECHO'] = False
 
-connect_db(app)
+connect_db(app), db.drop_all(), db.create_all()
 
-db.drop_all(), db.create_all()
+demo_user_json = {
+    "name": "Julio",
+    "email": "julio@gmail.com",
+    "password": "123Securepassword321",
+    "phone_number": "938-323-321"
+}
 
 class UserTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        """Create new user and group to add new members to"""
-        Users.query.delete()
-        # Create User
-        cls.user_password = "123TESTING"
-        cls.user_username = "THISISATEST"
-        cls.user = Users.sign_up(
-            name="TEST TESTING",
-            email="test@test.com",
-            password=cls.user_password, 
-            phone_number="+1 213 999 2332"
-        )
-
-        db.session.add(cls.user)
-        db.session.commit()
-
-        cls.user_id = cls.user.id
-        
-        return super().setUpClass()
     
     def setUp(self) -> None:
-        """Empty Groups table and add a member to it"""
-        # Create Group
-        self.group = Groups(
-            name="TEST TESTING",
-            user_id=self.user_id,
-            description="TESTSTSETTSE"
-        )
+        self.user: User = User.sign_up(**demo_user_json)
 
-        db.session.add(self.group)
-        db.session.commit()
-        
-        self.group_id = self.group.id
-        
-        # Add member to group
-        self.member = Group_Members(
-            name="TEEEST",
-            email="TESTINGTON@TEST.com",
-            phone_number="+132312323"
-        )
-        self.group.members.append(self.member)
-        
-        db.session.commit()
-        
-        self.member_id = self.member.id
-    
     def tearDown(self) -> None:
-        Groups.query.delete()
+        Users.query.delete()
         db.session.commit()
         db.session.rollback()
+    
+    def test_user(self) -> None:
+        """Test if user exists"""
+        self.assertTrue(self.user)
+        user_from_db: Users = Users.query.filter_by(id=self.user.id).first()
+        self.assertEqual(self.user.id, user_from_db.id)
+    
+    def test_get_by_id(self) -> None:
+        """Test get_by_id method"""
 
-    def empty_table(self) -> None:
-        """Function to empty Groups table"""
-        Groups.query.delete()
-        db.session.commit()
+        user = User.get_by_id(self.user.id)
+        
+        self.assertEqual(user.id, self.user.id)
 
-    # def test_member(self) -> None:
-    #     """Test that pre-made group has member"""
+    def test_edit(self) -> None:
+        """Test that changes in both User and Users"""
+        self.user.edit("Oiluj", "emailaemei", "23132")
+        user_from_db: Users = Users.query.filter_by(id=self.user.id).first()
         
-    #     group = Groups.query.first()
-        
-    #     self.assertEqual(group, self.group)
-    #     self.assertEqual(len(group.members), 1)
+        self.assertEqual(self.user.name, user_from_db.name, "Test that name change appears in database and User")
+        self.assertEqual(self.user.email, user_from_db.email, "Test that email change appears in database and User")
+    
+    def test_make_group(self) -> None:
+        """Check if make_group creates group"""
+        group = self.user.make_group("New group!", "I made a group!")
+        group_from_db: Groups = Groups.query.filter_by(id=group.id).first()
+        self.assertEqual(group.id, group_from_db.id)
