@@ -5,22 +5,22 @@ from models.Member_Payments import Member_Payments
 class Group_Payments(db.Model):
     __tablename__ = "group_payments"
 
-    id = db.Column(
+    id: int = db.Column(
         db.Integer(),
         primary_key=True,
         autoincrement=True,
         unique=True
     )
-    group_id = db.Column(
+    group_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("groups.id", ondelete="CASCADE"),
         primary_key=True
     )
-    name = db.Column(
+    name: str = db.Column(
         db.String(45),
         nullable=False
     )
-    total_amount = db.Column(
+    total_amount: float = db.Column(
         db.Numeric(15, 6),
         nullable=True
     )

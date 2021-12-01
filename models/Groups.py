@@ -5,25 +5,25 @@ from models.Group_Payments import Group_Payments
 class Groups(db.Model):
     __tablename__ = "groups"
 
-    id = db.Column(
+    id: int = db.Column(
         db.Integer(),
         primary_key=True,
         autoincrement=True,
         unique=True
     )
     
-    user_id = db.Column(
+    user_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("users.id", ondelete="CASCADE"),
         primary_key=True
     )
     
-    name = db.Column(
+    name: str = db.Column(
         db.String(30),
         nullable=False
     )
 
-    description = db.Column(
+    description: str = db.Column(
         db.String(200),
         nullable=True
     )

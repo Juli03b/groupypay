@@ -5,19 +5,19 @@ from models.Group_Members import Group_Members
 class Member_Payments(db.Model):
     __tablename__ = "member_payments"
 
-    member_id = db.Column(
+    member_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("group_members.id", ondelete="CASCADE"),
         primary_key=True
     )
     
-    group_payment_id = db.Column(
+    group_payment_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("group_payments.id", ondelete="CASCADE"),
         primary_key=True
     )
 
-    amount = db.Column(
+    amount: float = db.Column(
         db.Numeric(15, 6),
         nullable=False
     )
@@ -32,7 +32,7 @@ class Member_Payments(db.Model):
         nullable=True
     )
     
-    paid = db.Column(
+    paid: bool = db.Column(
         db.Boolean(),
         default=False,
         nullable=True

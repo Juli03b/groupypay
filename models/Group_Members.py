@@ -4,26 +4,26 @@ from sqlalchemy.sql.functions import now
 class Group_Members(db.Model):
     __tablename__ = "group_members"
 
-    id = db.Column(
+    id: int = db.Column(
         db.Integer(), 
         primary_key=True, 
         autoincrement=True,
         unique=True
     )
-    group_id = db.Column(
+    group_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("groups.id", ondelete="CASCADE"),
         primary_key=True
     )
-    name = db.Column(
+    name: str = db.Column(
         db.String(55),
         nullable=False
     )
-    email = db.Column(
+    email: str = db.Column(
         db.String(127),
         nullable=False
     )
-    phone_number = db.Column(
+    phone_number: str = db.Column(
         db.String(),
         nullable=True,
     )
