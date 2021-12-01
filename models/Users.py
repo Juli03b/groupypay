@@ -7,28 +7,28 @@ bcrypt = Bcrypt()
 class Users(db.Model):
     __tablename__ = "users"
 
-    id = db.Column(
+    id: int = db.Column(
         db.Integer(), 
         primary_key=True, 
         autoincrement=True)
     
-    name = db.Column(
+    name: str = db.Column(
         db.String(55),
         nullable=False
     )
 
-    email = db.Column(
+    email: str = db.Column(
         db.String(127),
         nullable=False,
         unique=True
     )
 
-    password = db.Column(
+    password: str = db.Column(
         db.String(),
         nullable=False
     )
 
-    phone_number = db.Column(
+    phone_number: str = db.Column(
         db.String(),
         nullable=True,
         unique=True
@@ -42,7 +42,7 @@ class Users(db.Model):
     groups = db.relationship("Groups", backref="users", passive_deletes=True)
 
     def __repr__(self):
-        return f'<User id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
+        return f'<Users id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
 
     @classmethod
     def sign_up(cls, name: str, email: str, password: str, phone_number: str=None):
