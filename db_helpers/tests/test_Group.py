@@ -2,6 +2,8 @@
 
 import sys
 
+from Group_Members import Group_Members
+
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -52,4 +54,11 @@ class GroupTestCase(TestCase):
         payment = self.group.add_payment("Games", 132.322)
         payment_from_db: Group_Payments = Group_Payments.query.filter_by(id=payment.id).first()
         
-        self.assertEqual(payment.id, payment_from_db.id) 
+        self.assertEqual(payment.id, payment_from_db.id, "Test that payment can be found in db")
+    
+    def test_add_member(self) -> None:
+        """Test add_member"""
+        member = self.group.add_member("Julio2.0", "JB2@gmail.com", "3132233")
+        member_from_db: Group_Members = Group_Members.query.filter_by(id=member.id).first()
+        
+        self.assertEqual(member.id, member_from_db.id, "Test that member can be found in db")
