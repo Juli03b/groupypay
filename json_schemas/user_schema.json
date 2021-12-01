@@ -1,88 +1,79 @@
 {
+    "$id": "http://json-schema.org/draft-07/schema",
     "$schema": "http://json-schema.org/draft-07/schema",
-    "type": "object",
-    "title": "User schema",
-    "description": "Schema to validate user inputs.",
     "default": {},
+    "description": "Schema for user",
     "examples": [
         {
-            "first_name": "first",
-            "last_name": "last",
-            "email": "joey.poser@gmail.com",
-            "password": "2iIU#EESdW",
-            "phone_number": "+1 999-999-999"
+            "name": "Julio",
+            "email": "julio@gmail.com",
+            "password": "123Securepassword321",
+            "phone_number": "+1 938-323-321"
+        },
+        {
+            "name": "John Does",
+            "email": "jd@gmail.com",
+            "password": "123Securepassword321"
         }
     ],
     "required": [
-        "first_name",
-        "last_name",
+        "name",
         "email",
         "password"
     ],
+    "title": "The user schema",
+    "type": "object",
     "properties": {
-        "first_name": {
-            "$id": "#/properties/first_name",
+        "name": {
+            "$id": "#/properties/name",
             "type": "string",
-            "title": "The first_name schema",
-            "description": "First name must me at leaset one character, and at most 20.",
+            "title": "The name schema",
+            "description": "User's name",
             "default": "",
             "minLength": 1,
-            "maxLength": 20,
+            "maxLength": 55,
             "examples": [
-                "first",
                 "Julio",
-                "A"
-            ]
-        },
-        "last_name": {
-            "$id": "#/properties/last_name",
-            "type": "string",
-            "title": "The last_name schema",
-            "description": "Last name must me at least one character, and at most 20.",
-            "default": "",
-            "minLength": 1,
-            "maxLength": 20,
-            "examples": [
-                "Last",
-                "B",
-                "Doe"
+                "Jane",
+                "Jon Doe"
             ]
         },
         "email": {
             "$id": "#/properties/email",
             "type": "string",
             "title": "The email schema",
-            "description": "Email.",
+            "description": "User's email",
             "default": "",
-            "format": "email",
             "minLength": 6,
             "maxLength": 127,
             "examples": [
-                "joe.poser@gmail.com"
+                "julio@gmail.com"
             ]
         },
         "password": {
             "$id": "#/properties/password",
             "type": "string",
             "title": "The password schema",
-            "description": "Password must be at least 5 characters, and at most 30",
+            "description": "User's password",
             "default": "",
-            "minLength": 5,
-            "maxLength": 20,
             "examples": [
+                "123Securepassword321",
                 "IaMW@!!",
                 "12345678910111213141516171819"
-            ]
+            ],
+            "minLength": 5,
+            "maxLength": 20
         },
         "phone_number": {
             "$id": "#/properties/phone_number",
             "type": "string",
             "title": "The phone_number schema",
-            "description": "Phone",
+            "description": "User's phone number",
             "default": "",
             "minLength":10,
             "maxLength":15,
             "examples": [
+                "+1 938-323-321",
                 "+1 999-999-999"
             ]
         }
