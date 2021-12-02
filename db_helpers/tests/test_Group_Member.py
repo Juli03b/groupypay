@@ -2,7 +2,6 @@
 
 import sys
 
-
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -51,7 +50,7 @@ class Group_MemberTestCase(TestCase):
         """Test if group_member exists"""
         group_member_from_db: Group_Members = Group_Members.query.filter_by(id=self.group_member.id).first()
 
-        self.assertEqual(self.group_member.id, group_member_from_db.id, "Test that group member can be found in db")
+        self.assertEqual(self.group_member.id, group_member_from_db.id, "Test that group member can be found in database")
         
     def test_edit(self) -> None:
         """Test edit method"""
@@ -63,6 +62,12 @@ class Group_MemberTestCase(TestCase):
         self.assertEqual(self.group_member.phone_number, group_member_from_db.phone_number, 
                          "Test that phone_number changes in database and Group_Member")
 
+    def test_delete(self) -> None:
+        """Test delete method"""
+        self.group_member.delete()
+        exists: None or Group_Members = Group_Members.query.filter_by(id=self.user.id).first()
+        self.assertFalse(exists, "Test if the group member can be found in the database")
+    
     def test_add_payment(self) -> None:
         """Test add_payment mehtod"""
         group_payment = self.group.add_payment("Payment!!!", 9999999)
