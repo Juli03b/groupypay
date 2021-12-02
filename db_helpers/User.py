@@ -1,6 +1,6 @@
 """Module for User class"""
 
-from Groups import Groups
+from models.Groups import Groups
 from db_helpers.Group import Group
 from exceptions.BadRequest import BadRequest
 from sqlalchemy.exc import IntegrityError
@@ -11,12 +11,14 @@ class User:
     
     def __init__(self, user: Users):
         self.id = user.id
-        self.email = user.email
         self.name = user.name
         self.email = user.email
         self.phone_number = user.phone_number
         self.groups = user.groups
 
+    def __repr__(self) -> str:
+        return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number}>"
+    
     @classmethod
     def sign_up(cls, **validated_json):
         """Sign up with validated json. Creates and returns user, or raises Bad Request error if there's a database error"""
@@ -33,27 +35,36 @@ class User:
             [message] = error.orig.args
 
             raise BadRequest(message, "Database error", pgcode=error.orig.pgcode) from error
-
+        
         return cls(user)
     
     @classmethod
     def get_by_id(cls, id: str):
         """Return a user using an id"""
         
-        user = Users.query.filter_by(id=id)
-        del user.password
+        user: Users = Users.query.filter_by(id=id).first()
         
         return cls(user)
     
+    def edit(self, name: str=None, email: str=None, phone_number: str=None) -> None:
+        """Edit group"""
+        user: Users = Users.query.filter_by(id=self.id).first()
+        user.name = self.name = name or user.name
+        user.email = self.email = email or user.email
+        user.phone_number = self.phone_number = phone_number or user.phone_number
+        
+        db.session.commit()
+        
     def make_group(self, name: str, description: str) -> Groups:
         """Make a group"""
         
         group = Groups(
+            user_id=self.id,
             name=name,
             description=description
         )
         
-        self.groups.append(group)
+        db.session.add(group)
         db.session.commit()
         
         return Group(group)
