@@ -2,8 +2,10 @@
 
 import sys
 from flask.scaffold import setupmethod
+from Member_Payments import Member_Payments
 
 from db_helpers.Group_Member import Group_Member
+from db_helpers.Group_Payment import Group_Payment
 
 sys.path.append("../..")
 
@@ -59,4 +61,13 @@ class Group_MemberTestCase(TestCase):
         group_member_from_db: Group_Members = Group_Members.query.filter_by(id=self.group_member.id).first()
         
         self.assertEqual(self.group_member.name, group_member_from_db.name, "Test that name changes in both group_member object and in db")
+
+    def test_add_payment(self) -> None:
+        """Test add_payment mehtod"""
+        group_payment = self.group.add_payment("Payment!!!", 9999999)
+        member_payment = self.group_member.add_payment(group_payment.id, 31323.331)
+        member_payment_from_db: Member_Payments = Member_Payments.query.filter_by(id=member_payment.id).first()
         
+        self.assertEqual((member_payment.member_id, member_payment.group_payment_id), 
+                         (member_payment_from_db.member_id, member_payment_from_db.group_payment_id),
+                         "Test that member payment can be found in db")
