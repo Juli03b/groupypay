@@ -29,12 +29,16 @@ demo_user_json = {
 class GroupTestCase(TestCase):
     
     def setUp(self) -> None:
+        """Create user and group"""
+        Users.query.delete()
+        db.session.commit()
+        
         self.user: User = User.sign_up(**demo_user_json)
         self.group: Group = self.user.make_group("New group!", "I made a group!")
 
     def tearDown(self) -> None:
-        Users.query.delete()
-        db.session.commit()
+        """Rollback session"""
+        
         db.session.rollback()
     
     def test_group(self) -> None:
