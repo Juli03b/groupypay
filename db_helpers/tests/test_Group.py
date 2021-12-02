@@ -38,7 +38,6 @@ class GroupTestCase(TestCase):
 
     def tearDown(self) -> None:
         """Rollback session"""
-        
         db.session.rollback()
     
     def test_group(self) -> None:
@@ -57,7 +56,7 @@ class GroupTestCase(TestCase):
         """Test add_payment"""
         payment = self.group.add_payment("Games", 132.322)
         payment_from_db: Group_Payments = Group_Payments.query.filter_by(id=payment.id).first()
-        
+
         self.assertEqual(payment.id, payment_from_db.id, "Test that payment can be found in db")
     
     def test_add_member(self) -> None:
