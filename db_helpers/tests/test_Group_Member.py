@@ -34,6 +34,8 @@ class Group_MemberTestCase(TestCase):
         """Create user and group"""
         cls.user: User = User.sign_up(**demo_user_json)
         cls.group: Group = cls.user.make_group("New group!", "I made a group!")
+        
+        return super().setUpClass()
 
     def setUp(self):
         """Create group member"""
@@ -52,3 +54,9 @@ class Group_MemberTestCase(TestCase):
         self.assertEqual(self.group_member.id, group_member_from_db.id, "Test that group member can be found in db")
         
     def test_edit(self) -> None:
+        """Test edit method"""
+        self.group_member.edit("0iluj", "011uJ@gmail.com", "322718713")
+        group_member_from_db: Group_Members = Group_Members.query.filter_by(id=self.group_member.id).first()
+        
+        self.assertEqual(self.group_member.name, group_member_from_db.name, "Test that name changes in both group_member object and in db")
+        
