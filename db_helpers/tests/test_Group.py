@@ -51,6 +51,13 @@ class GroupTestCase(TestCase):
         group = Group.get_by_id(self.group.id)
         
         self.assertEqual(group.id, self.user.id)
+    
+    def test_edit(self) -> None:
+        """Test edit method"""
+        self.group.edit("!groupNEW", "WEN")
+        group_from_db: Groups = Groups.query.filter_by(id=self.group.id).first()
+
+        self.assertEqual(self.group.name, group_from_db.name, "Test that the name changed in database and Group object")
         
     def test_add_payment(self) -> None:
         """Test add_payment"""
