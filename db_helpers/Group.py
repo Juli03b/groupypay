@@ -16,12 +16,13 @@ class Group:
         self.id = group.id
         self.name = group.name
         self.user_id = group.user_id
-        self.name = group.name
         self.description = group.description
         self.created_on = group.created_on
         self.members: List[Group_Members] = group.members
         self.payments: List[Group_Payments] = group.payments
-        
+    
+    def __repr__(self) -> str:
+        return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on}>"
     @classmethod
     def get_by_id(cls, id: int):
         """Return a group using an id"""
@@ -31,7 +32,7 @@ class Group:
     
     def edit(self, name: str=None, description: str=None) -> None:
         """Edit group"""
-        group: Groups = Groups.query.filter_by(id=self.id)
+        group: Groups = Groups.query.filter_by(id=self.id).first()
         group.name = self.name = name or group.name
         group.description = self.description = description or group.description
     
