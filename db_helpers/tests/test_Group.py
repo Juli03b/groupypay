@@ -2,7 +2,6 @@
 
 import sys
 
-
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -57,7 +56,10 @@ class GroupTestCase(TestCase):
         self.group.edit("!groupNEW", "WEN")
         group_from_db: Groups = Groups.query.filter_by(id=self.group.id).first()
 
-        self.assertEqual(self.group.name, group_from_db.name, "Test that the name changed in database and Group object")
+        self.assertEqual(self.group.description, group_from_db.description, 
+            "Test that the name changed in database and Group object")
+        self.assertEqual(self.group.description, group_from_db.description, 
+            "Test that the description changed in database and Group object")
     
     def test_delete(self) -> None:
         """Test delete method"""

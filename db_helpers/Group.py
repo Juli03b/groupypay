@@ -23,6 +23,7 @@ class Group:
     
     def __repr__(self) -> str:
         return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on}>"
+    
     @classmethod
     def get_by_id(cls, id: int):
         """Return a group using an id"""

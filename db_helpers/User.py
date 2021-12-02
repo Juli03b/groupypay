@@ -54,10 +54,12 @@ class User:
         user.phone_number = self.phone_number = phone_number or user.phone_number
         
         db.session.commit()
-        
+    
+    def delete(self):
+        Users.query.filter_by(id=self.id).delete()
+    
     def make_group(self, name: str, description: str) -> Groups:
         """Make a group"""
-        
         group = Groups(
             user_id=self.id,
             name=name,
