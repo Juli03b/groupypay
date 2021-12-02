@@ -1,6 +1,6 @@
 """Module for Group_Payments model"""
 
-from Member_Payments import Member_Payments
+from models.Member_Payments import Member_Payments
 from exceptions.BadRequest import BadRequest
 from sqlalchemy.exc import IntegrityError
 from models.Group_Payments import Group_Payments, db
@@ -12,7 +12,7 @@ class Group_Payment:
         self.id = payment.id
         self.group_id = payment.group_id
         self.name = payment.name
-        self.total_amount = payment.email
+        self.total_amount = payment.total_amount
         self.member_payments = payment.member_payments
         self.created_on = payment.created_on
     
@@ -26,7 +26,7 @@ class Group_Payment:
  
     def edit(self, name: str=None, total_amount=None) -> None:
         """Edit payment using id"""
-        payment: Group_Payments = Group_Payments.query.filter_by(id=id)
+        payment: Group_Payments = Group_Payments.query.filter_by(id=id).first()
         payment.name = self.name = name or payment.name
         payment.total_amount = self.total_amount = total_amount or payment.total_amount
 
