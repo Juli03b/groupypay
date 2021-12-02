@@ -59,7 +59,7 @@ class UserTestCase(TestCase):
                          "Test that phone number change appears in database and User")
     
     def test_make_group(self) -> None:
-        """Check if make_group creates group"""
+        """Test make_group"""
         group = self.user.make_group("New group!", "I made a group!")
         group_from_db: Groups = Groups.query.filter_by(id=group.id).first()
-        self.assertEqual(group.id, group_from_db.id)
+        self.assertEqual(group.id, group_from_db.id, "Test that the group apears in database")
