@@ -40,8 +40,9 @@ class Group:
     
     def delete(self) -> None:
         """Delete group"""
-        Groups.query.filter_by(id=self.id).first().delete()
-    
+        Groups.query.filter_by(id=self.id).delete()
+        db.session.commit()
+        
     def add_payment(self, name: str, total_amount: float or int) -> Group_Payment:
         """Create and add payment to group"""
         payment = Group_Payments(
