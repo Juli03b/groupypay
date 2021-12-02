@@ -1,5 +1,5 @@
 """Unit test for User class"""
-# TEST EDIT!!!!!!!!!!!!!!
+
 import sys
 
 
@@ -58,9 +58,15 @@ class GroupTestCase(TestCase):
         group_from_db: Groups = Groups.query.filter_by(id=self.group.id).first()
 
         self.assertEqual(self.group.name, group_from_db.name, "Test that the name changed in database and Group object")
-        
+    
+    def test_delete(self) -> None:
+        """Test delete method"""
+        self.group.delete()
+        exists: None or Groups = Groups.query.filter_by(id=self.group.id).first()
+        self.assertFalse(exists)
+    
     def test_add_payment(self) -> None:
-        """Test add_payment"""
+        """Test add_payment method"""
         payment = self.group.add_payment("Games", 132.322)
         payment_from_db: Group_Payments = Group_Payments.query.filter_by(id=payment.id).first()
 
