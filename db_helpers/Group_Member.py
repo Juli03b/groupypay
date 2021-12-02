@@ -29,8 +29,8 @@ class Group_Member:
         return cls(payment)
  
     def edit(self, name:str=None, email: str=None, phone_number: str=None) -> None:
-        """Edit member using id"""
-        member: Group_Members = Group_Members.query.filter_by(id=self.id)
+        """Edit member"""
+        member: Group_Members = Group_Members.query.filter_by(id=self.id).first()
         member.name = name or member.name
         member.email = email or member.email
         member.phone_number = phone_number or member.phone_number
@@ -38,11 +38,12 @@ class Group_Member:
         db.session.commit()
         
     def delete(self) -> None:
-        """Delete payment using id"""
-        
+        """Delete payment"""
         Group_Members.query.filter_by(id=self.id).delete()
+        db.session.commit()
         
     def add_payment(self, group_payment_id: int, amount: float or int) -> Member_Payment:
+        """Add payment"""
         member_payment: Member_Payments = Member_Payments(
             member_id=self.id,
             group_payment_id=group_payment_id,
