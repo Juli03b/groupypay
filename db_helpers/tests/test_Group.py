@@ -1,13 +1,13 @@
 """Unit test for User class"""
-
+# TEST EDIT!!!!!!!!!!!!!!
 import sys
 
-from Group_Members import Group_Members
 
 sys.path.append("../..")
 
 from unittest import TestCase
 from app import app, connect_db, db
+from models.Group_Members import Group_Members
 from models.Users import Users
 from models.Groups import Groups
 from models.Group_Payments import Group_Payments
