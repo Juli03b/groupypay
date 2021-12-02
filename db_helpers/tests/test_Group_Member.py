@@ -2,11 +2,13 @@
 
 import sys
 
+
 sys.path.append("../..")
 
 from unittest import TestCase
 from app import app, connect_db, db
 from models.Group_Members import Group_Members
+from models.Users import Users
 from models.Member_Payments import Member_Payments
 from db_helpers.Group import Group
 from db_helpers.User import User
@@ -27,6 +29,8 @@ class Group_MemberTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         """Create user and group"""
+        Users.query.delete()
+        
         cls.user: User = User.sign_up(**demo_user_json)
         cls.group: Group = cls.user.make_group("New group!", "I made a group!")
         
@@ -34,12 +38,13 @@ class Group_MemberTestCase(TestCase):
 
     def setUp(self):
         """Create group member"""
+        Group_Members.query.delete()
+        db.session.commit()
+        
         self.group_member = self.group.add_member("Juli0", "Ju110@gmail.com", "317817223")
 
     def tearDown(self) -> None:
-        """Delete all group members"""
-        Group_Members.query.delete()
-        db.session.commit()
+        """Rollback session"""
         db.session.rollback()
     
     def test_group_member(self) -> None:
@@ -53,7 +58,10 @@ class Group_MemberTestCase(TestCase):
         self.group_member.edit("0iluj", "011uJ@gmail.com", "322718713")
         group_member_from_db: Group_Members = Group_Members.query.filter_by(id=self.group_member.id).first()
         
-        self.assertEqual(self.group_member.name, group_member_from_db.name, "Test that name changes in both group_member object and in db")
+        self.assertEqual(self.group_member.name, group_member_from_db.name, "Test that name changes in database and Group_Member")
+        self.assertEqual(self.group_member.email, group_member_from_db.email, "Test that email changes in database and Group_Member")
+        self.assertEqual(self.group_member.phone_number, group_member_from_db.phone_number, 
+                         "Test that phone_number changes in database and Group_Member")
 
     def test_add_payment(self) -> None:
         """Test add_payment mehtod"""
