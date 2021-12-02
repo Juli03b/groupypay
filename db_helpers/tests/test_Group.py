@@ -44,7 +44,7 @@ class GroupTestCase(TestCase):
         """Test if group exists"""
         group_from_db: Groups = Groups.query.filter_by(id=self.group.id).first()
 
-        self.assertEqual(group_from_db.id, self.group.id)
+        self.assertEqual(group_from_db.id, self.group.id, "Test that the group can be found in the database")
         
     def test_get_by_id(self) -> None:
         """Test get_by_id method"""
@@ -57,7 +57,7 @@ class GroupTestCase(TestCase):
         payment = self.group.add_payment("Games", 132.322)
         payment_from_db: Group_Payments = Group_Payments.query.filter_by(id=payment.id).first()
 
-        self.assertEqual(payment.id, payment_from_db.id, "Test that payment can be found in db")
+        self.assertEqual(payment.id, payment_from_db.id, "Test that payment can be found in the database")
     
     def test_add_member(self) -> None:
         """Test add_member"""
