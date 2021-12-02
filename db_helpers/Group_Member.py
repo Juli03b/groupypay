@@ -24,7 +24,7 @@ class Group_Member:
     def get_by_id(cls, id: str):
         """Return a user using an id"""
         
-        payment: Group_Members = Group_Members.query.filter_by(id=id)
+        payment: Group_Members = Group_Members.query.filter_by(id=id).first()
         
         return cls(payment)
  
@@ -33,7 +33,7 @@ class Group_Member:
         member: Group_Members = Group_Members.query.filter_by(id=self.id).first()
         member.name = self.name = name or member.name
         member.email = self.email = email or member.email
-        member.phone_number = self.phone_number = phone_number or member.phone_number
+        member.phone_number = self.phone_number = phone_number
         
         db.session.commit()
         
