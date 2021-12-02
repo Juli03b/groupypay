@@ -42,13 +42,14 @@ class Group_Member:
         
         Group_Members.query.filter_by(id=self.id).delete()
         
-    def add_payment(self, amount: float or int) -> Member_Payment:
-        group_payment: Group_Payments = Group_Payments.query.filter_by(id=self.id)
+    def add_payment(self, group_payment_id: int, amount: float or int) -> Member_Payment:
         member_payment: Member_Payments = Member_Payments(
+            member_id=self.id,
+            group_payemnt_id=group_payment_id,
             amount=amount
         )
         
-        group_payment.member_payments.append(member_payment)
+        db.session.add(member_payment)
         db.session.commit()
         
         return Member_Payment(member_payment)
