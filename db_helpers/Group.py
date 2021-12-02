@@ -1,7 +1,7 @@
 """Module for Group class"""
 
 from typing import List
-from Group_Members import Group_Members
+from models.Group_Members import Group_Members
 from db_helpers.Group_Member import Group_Member
 from db_helpers.Group_Payment import Group_Payment
 from models.Groups import Groups, db
@@ -25,7 +25,7 @@ class Group:
     @classmethod
     def get_by_id(cls, id: int):
         """Return a group using an id"""
-        group = Groups.query.filter_by(id=id)
+        group = Groups.query.filter_by(id=id).first()
 
         return cls(group)
     
@@ -37,14 +37,15 @@ class Group:
     
         db.session.commit()
     
-    def add_payment(self, name: str, total_amount) -> Group_Payment:
+    def add_payment(self, name: str, total_amount: float or int) -> Group_Payment:
         """Create and add payment to group"""
         payment = Group_Payments(
+            group_id=self.id,
             name=name,
             total_amount=total_amount
         )
         
-        self.payments.append(payment)
+        db.session.add(payment)
         db.session.commit()
         
         return Group_Payment(payment)
@@ -52,12 +53,13 @@ class Group:
     def add_member(self, name: str, email: str, phone_number: str) -> Group_Member:
         """Add member to the group and return member"""
         member: Group_Members = Group_Members(
+            group_id=self.id,
             name=name,
             email=email,
             phone_number=phone_number
         )
         
-        self.members.append(member)
+        db.session.add(member)
         db.session.commit()
         
         return Group_Member(member)
