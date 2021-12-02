@@ -1,8 +1,8 @@
 """Module for Group_Payments model"""
 
 from typing import Dict, List
-from Group_Payments import Group_Payments
-from Member_Payments import Member_Payments
+from models.Group_Payments import Group_Payments
+from models.Member_Payments import Member_Payments
 from db_helpers.Member_Payment import Member_Payment
 from exceptions.BadRequest import BadRequest
 from sqlalchemy.exc import IntegrityError
@@ -37,13 +37,12 @@ class Group_Member:
         
         db.session.commit()
         
-        
     def delete(self) -> None:
         """Delete payment using id"""
         
         Group_Members.query.filter_by(id=self.id).delete()
         
-    def add_payment(self, amount) -> Member_Payment:
+    def add_payment(self, amount: float or int) -> Member_Payment:
         group_payment: Group_Payments = Group_Payments.query.filter_by(id=self.id)
         member_payment: Member_Payments = Member_Payments(
             amount=amount
