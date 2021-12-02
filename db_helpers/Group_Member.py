@@ -1,7 +1,5 @@
-"""Module for Group_Payments model"""
+"""Module for Group_Members model"""
 
-from typing import Dict, List
-from models.Group_Payments import Group_Payments
 from models.Member_Payments import Member_Payments
 from db_helpers.Member_Payment import Member_Payment
 from exceptions.BadRequest import BadRequest
@@ -15,10 +13,12 @@ class Group_Member:
         self.id = member.id
         self.group_id = member.group_id
         self.name = member.name
-        self.total_amount = member.email
         self.email = member.email
         self.phone_number = member.phone_number
         self.added_on = member.added_on
+    
+    def __repr__(self) -> str:
+        return f"<Group_Member id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>"
     
     @classmethod
     def get_by_id(cls, id: str):
@@ -45,7 +45,7 @@ class Group_Member:
     def add_payment(self, group_payment_id: int, amount: float or int) -> Member_Payment:
         member_payment: Member_Payments = Member_Payments(
             member_id=self.id,
-            group_payemnt_id=group_payment_id,
+            group_payment_id=group_payment_id,
             amount=amount
         )
         
