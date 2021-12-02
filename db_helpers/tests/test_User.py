@@ -17,7 +17,7 @@ connect_db(app), db.drop_all(), db.create_all()
 
 demo_user_json = {
     "name": "Julio",
-    "email": "julio@gmail.com",
+    "email": "julio@g3mail.com",
     "password": "123Securepassword321",
     "phone_number": "938-323-321"
 }
@@ -25,11 +25,14 @@ demo_user_json = {
 class UserTestCase(TestCase):
     
     def setUp(self) -> None:
+        """Create a user"""
+        Users.query.delete()
+        db.session.commit()
+        
         self.user: User = User.sign_up(**demo_user_json)
 
     def tearDown(self) -> None:
-        Users.query.delete()
-        db.session.commit()
+        """Rollback session"""
         db.session.rollback()
     
     def test_user(self) -> None:
@@ -46,12 +49,14 @@ class UserTestCase(TestCase):
         self.assertEqual(user.id, self.user.id)
 
     def test_edit(self) -> None:
-        """Test that changes in both User and Users"""
-        self.user.edit("Oiluj", "emailaemei", "23132")
+        """Test that changes appear in both User and Users"""
+        self.user.edit("Oiluj", "emailaemei", "313232")
         user_from_db: Users = Users.query.filter_by(id=self.user.id).first()
         
         self.assertEqual(self.user.name, user_from_db.name, "Test that name change appears in database and User")
         self.assertEqual(self.user.email, user_from_db.email, "Test that email change appears in database and User")
+        self.assertEqual(self.user.phone_number, user_from_db.phone_number, 
+                         "Test that phone number change appears in database and User")
     
     def test_make_group(self) -> None:
         """Check if make_group creates group"""
