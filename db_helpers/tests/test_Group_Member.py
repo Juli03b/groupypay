@@ -1,20 +1,13 @@
 """Unit test for Group_Member class"""
 
 import sys
-from flask.scaffold import setupmethod
-from Member_Payments import Member_Payments
-
-from db_helpers.Group_Member import Group_Member
-from db_helpers.Group_Payment import Group_Payment
 
 sys.path.append("../..")
 
 from unittest import TestCase
 from app import app, connect_db, db
 from models.Group_Members import Group_Members
-from models.Users import Users
-from models.Groups import Groups
-from models.Group_Payments import Group_Payments
+from models.Member_Payments import Member_Payments
 from db_helpers.Group import Group
 from db_helpers.User import User
 
@@ -31,7 +24,7 @@ demo_user_json = {
 }
 
 class Group_MemberTestCase(TestCase):
-    @setupmethod
+    @classmethod
     def setUpClass(cls):
         """Create user and group"""
         cls.user: User = User.sign_up(**demo_user_json)
@@ -66,7 +59,10 @@ class Group_MemberTestCase(TestCase):
         """Test add_payment mehtod"""
         group_payment = self.group.add_payment("Payment!!!", 9999999)
         member_payment = self.group_member.add_payment(group_payment.id, 31323.331)
-        member_payment_from_db: Member_Payments = Member_Payments.query.filter_by(id=member_payment.id).first()
+        member_payment_from_db: Member_Payments = Member_Payments.query.filter_by(
+            member_id=member_payment.member_id,
+            group_payment_id=member_payment.group_payment_id
+        ).first()
         
         self.assertEqual((member_payment.member_id, member_payment.group_payment_id), 
                          (member_payment_from_db.member_id, member_payment_from_db.group_payment_id),
