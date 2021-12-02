@@ -31,9 +31,9 @@ class Group_Member:
     def edit(self, name:str=None, email: str=None, phone_number: str=None) -> None:
         """Edit member"""
         member: Group_Members = Group_Members.query.filter_by(id=self.id).first()
-        member.name = name or member.name
-        member.email = email or member.email
-        member.phone_number = phone_number or member.phone_number
+        member.name = self.name = name or member.name
+        member.email = self.email = email or member.email
+        member.phone_number = self.phone_number = phone_number or member.phone_number
         
         db.session.commit()
         
