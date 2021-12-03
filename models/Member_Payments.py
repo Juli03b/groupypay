@@ -38,4 +38,4 @@ class Member_Payments(BaseModel):
     )
     
     def __repr__(self):
-        return f'<Member_Payments member_id={self.member_id} group_id={self.group_payment_id} amount={self.amount} created_on={self.created_on} >'
+        return f'<Member_Payments member_id={self.member_id} group_payment_id={self.group_payment_id} amount={self.amount} created_on={self.created_on} >'
