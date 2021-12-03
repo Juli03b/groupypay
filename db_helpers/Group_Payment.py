@@ -16,6 +16,9 @@ class Group_Payment:
         self.member_payments = payment.member_payments
         self.created_on = payment.created_on
     
+    def __repr__(self) -> str:
+        return f"<Group_Payment id={self.id} group_id={self.group_id} name={self.name} total_amount={self.total_amount} member_payments={self.member_payments} created_on={self.created_on}>"
+    
     @classmethod
     def get_by_id(cls, id: str):
         """Return a user using an id"""
