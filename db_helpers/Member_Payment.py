@@ -39,8 +39,12 @@ class Member_Payment:
         
     def delete(self) -> None:
         """Delete payment using id"""
+        Member_Payments.query.filter_by(
+            member_id=self.member_id,
+            group_payment_id = self.group_payment_id
+        ).delete()
         
-        Member_Payments.query.filter_by(id=self.id).delete()
+        db.session.commit()
     
     def pay(self, amount) -> None:
         member_payment: Member_Payments = Member_Payments.query.get(
