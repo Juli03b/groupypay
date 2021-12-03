@@ -2,6 +2,8 @@
 
 import sys
 
+from db_helpers.Group_Member import Group_Member
+
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -51,7 +53,13 @@ class Group_MemberTestCase(TestCase):
         group_member_from_db: Group_Members = Group_Members.query.filter_by(id=self.group_member.id).first()
 
         self.assertEqual(self.group_member.id, group_member_from_db.id, "Test that group member can be found in database")
+    
+    def test_get_by_id(self) -> None:
+        """Test get_by_id method"""
+        group_member = Group_Member.get_by_id(self.group_member.id)
         
+        self.assertEqual(group_member.id, self.group_member.id, "Test that group_member has the same id as the class's group_member")
+    
     def test_edit(self) -> None:
         """Test edit method"""
         self.group_member.edit("0iluj", "011uJ@gmail.com", "322718713")
