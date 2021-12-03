@@ -2,7 +2,7 @@
 
 import sys
 
-sys.path.append("..")
+sys.path.append("../..")
 
 from unittest import TestCase
 from app import app, connect_db, db
