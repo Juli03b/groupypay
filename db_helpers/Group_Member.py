@@ -22,9 +22,9 @@ class Group_Member:
     
     @classmethod
     def get_by_id(cls, id: str):
-        """Return a user using an id"""
+        """Return a Group_Member using an id"""
         
-        payment: Group_Members = Group_Members.query.filter_by(id=id).first()
+        payment: Group_Members = Group_Members.query.get(id=id)
         
         return cls(payment)
  
