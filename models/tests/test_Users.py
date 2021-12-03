@@ -1,3 +1,5 @@
+"""Unit test for Users model"""
+
 import sys
 
 sys.path.append("../..")
