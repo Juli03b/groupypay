@@ -63,11 +63,11 @@ class Users(BaseModel):
         return user
 
     @classmethod
-    def sign_in(cls, email: str, password: str):
-        """Sign in class method, returns user"""
+    def authenticate(cls, email: str, password: str):
+        """Authenticate using email and password, and return user"""
+        user = cls.query.filter_by(email=email).first()
 
-        user: Users = cls.query.filter_by(email=email)
-        if not user:
-            verify_password = bcrypt.check_password_hash(user.password, password)
-        
-        
+        if user and bcrypt.check_password_hash(user.password, password):
+            return user
+
+        return False
