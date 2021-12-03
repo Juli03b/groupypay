@@ -59,7 +59,7 @@ class User:
         Users.query.filter_by(id=self.id).delete()
         db.session.commit()
     
-    def make_group(self, name: str, description: str) -> Groups:
+    def make_group(self, name: str, description: str) -> Group:
         """Make a group"""
         group = Groups(
             user_id=self.id,
