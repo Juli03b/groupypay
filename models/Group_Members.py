@@ -1,7 +1,7 @@
-from models.main import db
+from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
 
-class Group_Members(db.Model):
+class Group_Members(BaseModel):
     __tablename__ = "group_members"
 
     id: int = db.Column(
@@ -36,4 +36,3 @@ class Group_Members(db.Model):
 
     def __repr__(self):
         return f'<Group_Members id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>'
-        

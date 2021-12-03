@@ -1,10 +1,10 @@
-from models.main import db
-from models.Groups import Groups
+from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
+
 bcrypt = Bcrypt()
 
-class Users(db.Model):
+class Users(BaseModel):
     __tablename__ = "users"
 
     id: int = db.Column(

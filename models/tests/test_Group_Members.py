@@ -79,6 +79,6 @@ class Groups_MembersTestCase(TestCase):
         """Test that pre-made group has member"""
         
         group = Groups.query.first()
-        
+
         self.assertEqual(group, self.group)
         self.assertEqual(len(group.members), 1)

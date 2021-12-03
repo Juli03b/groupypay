@@ -1,8 +1,7 @@
-from models.main import db
+from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
-from models.Group_Members import Group_Members
 
-class Member_Payments(db.Model):
+class Member_Payments(BaseModel):
     __tablename__ = "member_payments"
 
     member_id: int = db.Column(
