@@ -69,3 +69,25 @@ class Member_PaymentTestCase(TestCase):
         self.assertEqual((member_payment.member_id, member_payment.group_payment_id),
                          (self.group_member.id, self.group_payment.id),
                          "Test that member payment's id from get_by_id is the same as member_payment's id")
+    
+    def test_edit(self) -> None:
+        """Test edit method"""
+        self.member_payment.edit(100)
+        member_payment_from_db: Member_Payments = Member_Payments.query.get(
+            (self.group_member.id, 
+            self.group_payment.id)
+        )
+
+        self.assertEqual(self.member_payment.amount, 100, "Test that member_payment amount is changed")
+        self.assertEqual(self.member_payment.amount, member_payment_from_db.amount, 
+                         "Test that member_payment amount changed in database and object")
+    
+    def test_delete(self) -> None:
+        """Test delete method"""
+        self.member_payment.delete()
+        member_payment_from_db: Member_Payments = Member_Payments.query.get(
+            (self.group_member.id, 
+            self.group_payment.id)
+        )
+        
+        self.assertEqual(member_payment_from_db, None, "Test that member_payment cannot be found in database")
