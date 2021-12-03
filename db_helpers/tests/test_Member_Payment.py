@@ -2,6 +2,8 @@
 
 import sys
 
+from db_helpers.Member_Payment import Member_Payment
+
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -51,12 +53,19 @@ class Member_PaymentTestCase(TestCase):
     
     def test_member_payment(self):
         """Test that member payment exists in database"""
-        print(self.group, "MEM PAYMNT")
-        print("PAYMNTS", Member_Payments.query.all())
         member_payment_from_db: Member_Payments = Member_Payments.query.get(
             (self.group_member.id, 
             self.group_payment.id)
         )
 
         self.assertEqual((member_payment_from_db.member_id, member_payment_from_db.group_payment_id),
-                         (self.group_member.id, self.group_payment.id))
+                         (self.group_member.id, self.group_payment.id),
+                         "Test that id of member_payment is the same from the database and object")
+    
+    def test_get_by_id(self) -> None:
+        """Test get_by_id method"""
+        member_payment = Member_Payment.get_by_id(self.member_payment.member_id, self.member_payment.group_payment_id)
+        
+        self.assertEqual((member_payment.member_id, member_payment.group_payment_id),
+                         (self.group_member.id, self.group_payment.id),
+                         "Test that member payment's id from get_by_id is the same as member_payment's id")
