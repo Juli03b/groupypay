@@ -16,15 +16,16 @@ class Group_Member:
         self.email = member.email
         self.phone_number = member.phone_number
         self.added_on = member.added_on
-    
+        self.key = (self.id, self.group_id)
+        
     def __repr__(self) -> str:
         return f"<Group_Member id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>"
     
     @classmethod
-    def get_by_id(cls, id: str):
-        """Return a Group_Member using an id"""
+    def get_by_id(cls, id: int, group_id: int):
+        """Return a Group_Member using a id and group id"""
         
-        payment: Group_Members = Group_Members.query.get(id=id)
+        payment: Group_Members = Group_Members.query.get((id, group_id))
         
         return cls(payment)
  
@@ -35,8 +36,14 @@ class Group_Member:
         member.email = self.email = email or member.email
         member.phone_number = self.phone_number = phone_number
         
-        db.session.commit()
-        
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
+    
     def delete(self) -> None:
         """Delete payment"""
         Group_Members.query.filter_by(id=self.id).delete()
