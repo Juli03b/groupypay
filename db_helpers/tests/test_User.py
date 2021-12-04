@@ -1,10 +1,10 @@
 """Unit test for User class"""
 
 import sys
-from exceptions.Unauthorized import Unauthorized
-
 sys.path.append("../..")
 
+
+from exceptions.Unauthorized import Unauthorized
 from models.Users import Users
 from models.Groups import Groups
 from unittest import TestCase
@@ -54,15 +54,15 @@ class UserTestCase(TestCase):
         
         self.assertEqual(user.id, self.user.id)
         
+        # Test that an exception is risen for wrong password
         self.assertRaises(Unauthorized, User.sign_in, 
             email=demo_user_json["email"],
             password="Fake Password",
-            msg="Test that an exception is risen for wrong password"
         )
+        # Test that an exception is risen for wrong email
         self.assertRaises(Unauthorized, User.sign_in, 
             email="NOuserWiththisEmail@",
             password=demo_user_json["password"],
-            msg="Test that an exception is risen for wrong email"
         )
         
     
