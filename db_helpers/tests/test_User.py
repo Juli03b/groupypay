@@ -4,6 +4,7 @@ import sys
 sys.path.append("../..")
 
 
+from exceptions.Bad_Request import Bad_Request
 from exceptions.Unauthorized import Unauthorized
 from models.Users import Users
 from models.Groups import Groups
@@ -69,7 +70,6 @@ class UserTestCase(TestCase):
             password=demo_user_json["password"],
         )
         
-    
     def test_edit(self) -> None:
         """Test edit method"""
         self.user.edit("Oiluj", "emailaemei", "313232")
@@ -77,9 +77,18 @@ class UserTestCase(TestCase):
         
         self.assertEqual(self.user.name, user_from_db.name, "Test that name change appears in database and User")
         self.assertEqual(self.user.email, user_from_db.email, "Test that email change appears in database and User")
-        self.assertEqual(self.user.phone_number, user_from_db.phone_number, 
-                         "Test that phone number change appears in database and User")
-    
+        self.assertEqual(self.user.phone_number, user_from_db.phone_number, "Test that phone number change appears in database and User")
+        
+        # Change phone number
+        self.user.edit(phone_number=demo_user_json["phone_number"])
+        self.assertEqual(self.user.phone_number, demo_user_json["phone_number"], "Test changing only the phone number")
+        
+        # Sign up another user
+        new_user = User.sign_up(**dict(name="new_user!", email="another@user", password="forTests", phone_number="0031"))
+        #Test that editing phone number to one that is in use raises a Bad_Request
+        self.assertRaises(Bad_Request, new_user.edit, phone_number=demo_user_json["phone_number"])
+        
+        
     def test_delete(self) -> None:
         """Test delete method"""
         self.user.delete()
