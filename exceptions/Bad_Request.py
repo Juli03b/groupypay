@@ -1,8 +1,8 @@
-"""Module for BadRequest exception"""
+"""Module for Bad_Request exception"""
 
-from .CustomError import CustomError
+from .Custom_Error import Custom_Error
 
-class BadRequest(CustomError):
+class Bad_Request(Custom_Error):
     """Exception to use when there's a client error, 400"""
 
     def __init__(self, message:str, cause:str, **kwargs):
