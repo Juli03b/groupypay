@@ -41,20 +41,21 @@ class User:
     
     @classmethod
     def sign_in(cls, email: str, password: str):
+        """Return user using email and password, raise exception incase of invalid credentaials"""
+        
         if not Users.query.filter_by(email=email).count():
-            raise Unauthorized("No user with that email has been found", "")
+            raise Unauthorized("No user with that email has been found", "Invalid credentials")
         
         user = Users.authenticate(email, password)
-        
+
         if not user:
-            raise Unauthorized("Wrong password", "")
+            raise Unauthorized("Wrong password", "Invalid credentials")
         
         return user
     
     @classmethod
     def get_by_id(cls, id: str):
         """Return a user using an id"""
-        
         user: Users = Users.query.filter_by(id=id).first()
         
         return cls(user)
@@ -66,9 +67,16 @@ class User:
         user.email = self.email = email or user.email
         user.phone_number = self.phone_number = phone_number
         
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
     
-    def delete(self):
+    def delete(self) -> None:
+        """Delete user"""
         Users.query.filter_by(id=self.id).delete()
         db.session.commit()
     
@@ -79,8 +87,16 @@ class User:
             name=name,
             description=description
         )
-        
+
         db.session.add(group)
-        db.session.commit()
+        
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
         
         return Group(group)
