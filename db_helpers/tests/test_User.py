@@ -55,12 +55,16 @@ class UserTestCase(TestCase):
         self.assertEqual(user.id, self.user.id)
         
         # Test that an exception is risen for wrong password
-        self.assertRaises(Unauthorized, User.sign_in, 
+        self.assertRaises(
+            Unauthorized, 
+            User.sign_in, 
             email=demo_user_json["email"],
             password="Fake Password",
         )
         # Test that an exception is risen for wrong email
-        self.assertRaises(Unauthorized, User.sign_in, 
+        self.assertRaises(
+            Unauthorized, 
+            User.sign_in, 
             email="NOuserWiththisEmail@",
             password=demo_user_json["password"],
         )
