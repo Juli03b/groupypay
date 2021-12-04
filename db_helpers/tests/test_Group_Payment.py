@@ -48,14 +48,14 @@ class Group_PaymentTestCase(TestCase):
     
     def test_group_payment(self):
         """Test that group payment exists in database"""
-        group_payment_from_db: Group_Payments = Group_Payments.query.get(self.group_payment.id)
+        group_payment_from_db: Group_Payments = Group_Payments.query.get(self.group_payment.key)
 
         self.assertEqual(group_payment_from_db.id, self.group_payment.id,
                          "Test that id of member_payment is the same from the database and object")
     
     def test_get_by_id(self) -> None:
         """Test get_by_id method"""
-        group_payment = Group_Payment.get_by_id(self.group_payment.id)
+        group_payment = Group_Payment.get_by_id(self.group_payment.id, self.group_payment.group_id)
         
         self.assertEqual(group_payment.id, self.group_payment.id,
                          "Test that group payment's id from get_by_id is the same as group_payment's id")
