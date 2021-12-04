@@ -1,8 +1,9 @@
 """Module for User class"""
 
+from exceptions.Unauthorized import Unauthorized
 from models.Groups import Groups
 from db_helpers.Group import Group
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Users import Users, db
 
@@ -34,9 +35,21 @@ class User:
             db.session.rollback()
             [message] = error.orig.args
 
-            raise BadRequest(message, "Database error", pgcode=error.orig.pgcode) from error
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
         
         return cls(user)
+    
+    @classmethod
+    def sign_in(cls, email: str, password: str):
+        if not Users.query.filter_by(email=email).exists():
+            raise Unauthorized("No user with that email has been found", "")
+        
+        user = Users.authenticate(email, password)
+        
+        if not user:
+            raise Unauthorized("Wrong password", "")
+        
+        return user
     
     @classmethod
     def get_by_id(cls, id: str):
