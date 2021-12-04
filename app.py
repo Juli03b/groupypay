@@ -1,6 +1,6 @@
 """Main module for app setup"""
 
-from exceptions.CustomError import CustomError
+from exceptions.Custom_Error import CustomError
 from flask.json import jsonify
 from os import environ
 from flask import Flask
