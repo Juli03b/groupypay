@@ -80,3 +80,7 @@ class GroupTestCase(TestCase):
         member_from_db: Group_Members = Group_Members.query.filter_by(id=member.id).first()
         
         self.assertEqual(member.id, member_from_db.id, "Test that member can be found in db")
+        # Test that adding a member with the same email raises a Bad_Request
+        self.assertRaises(Bad_Request, self.group.add_member, "Julio2.0", "JB2@gmail.com", "222")
+        # Test that adding a member with the same phone number raises a Bad_Request
+        self.assertRaises(Bad_Request, self.group.add_member, "Julio2.1", "JB2.1@gmail.com", "3132233")
