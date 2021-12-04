@@ -31,10 +31,7 @@ class Member_Payment:
         
     def edit(self, amount) -> None:
         """Edit payment using id"""
-        member_payment: Member_Payments = Member_Payments.query.get(
-            (self.member_id,
-            self.group_payment_id)
-        )
+        member_payment: Member_Payments = Member_Payments.query.get(self.key)
         member_payment.amount = self.amount = amount or member_payment.amount
         
         try:
