@@ -1,7 +1,7 @@
 """Module for Group_Payments model"""
 
 from models.Member_Payments import Member_Payments
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import BadRequest
 from sqlalchemy.exc import IntegrityError
 from models.Group_Payments import Group_Payments, db
 

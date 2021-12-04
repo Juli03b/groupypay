@@ -1,6 +1,7 @@
 """Unit test for User class"""
 
 import sys
+from exceptions.Unauthorized import Unauthorized
 
 sys.path.append("../..")
 
@@ -43,13 +44,30 @@ class UserTestCase(TestCase):
     
     def test_get_by_id(self) -> None:
         """Test get_by_id method"""
-
         user = User.get_by_id(self.user.id)
-        
+
         self.assertEqual(user.id, self.user.id)
 
+    def test_sign_in(self) -> None:
+        """Test sign_in method"""
+        user = User.sign_in(demo_user_json["email"], demo_user_json["password"])
+        
+        self.assertEqual(user.id, self.user.id)
+        
+        self.assertRaises(Unauthorized, User.sign_in, 
+            email=demo_user_json["email"],
+            password="Fake Password",
+            msg="Test that an exception is risen for wrong password"
+        )
+        self.assertRaises(Unauthorized, User.sign_in, 
+            email="NOuserWiththisEmail@",
+            password=demo_user_json["password"],
+            msg="Test that an exception is risen for wrong email"
+        )
+        
+    
     def test_edit(self) -> None:
-        """Test that changes appear in both User and Users"""
+        """Test edit method"""
         self.user.edit("Oiluj", "emailaemei", "313232")
         user_from_db: Users = Users.query.filter_by(id=self.user.id).first()
         
@@ -58,8 +76,14 @@ class UserTestCase(TestCase):
         self.assertEqual(self.user.phone_number, user_from_db.phone_number, 
                          "Test that phone number change appears in database and User")
     
+    def test_delete(self) -> None:
+        """Test delete method"""
+        self.user.delete()
+        exists: None or Users = Users.query.filter_by(id=self.user.id).first()
+        self.assertFalse(exists, "Test if the user can be found in the database")
+        
     def test_make_group(self) -> None:
-        """Test make_group"""
+        """Test make_group method"""
         group = self.user.make_group("New group!", "I made a group!")
         group_from_db: Groups = Groups.query.filter_by(id=group.id).first()
         self.assertEqual(group.id, group_from_db.id, "Test that the group apears in database")

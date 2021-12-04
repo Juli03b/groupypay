@@ -2,7 +2,7 @@
 
 from models.Member_Payments import Member_Payments
 from db_helpers.Member_Payment import Member_Payment
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Group_Members import Group_Members, db
 

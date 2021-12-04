@@ -6,7 +6,7 @@ from db_helpers.Group_Member import Group_Member
 from db_helpers.Group_Payment import Group_Payment
 from models.Groups import Groups, db
 from models.Group_Payments import Group_Payments
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import BadRequest
 from sqlalchemy.exc import IntegrityError
 
 class Group:
