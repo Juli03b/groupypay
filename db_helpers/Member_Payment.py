@@ -1,5 +1,6 @@
 """Module for Member_Payments model"""
 
+from sqlalchemy.sql.functions import now
 from models.Member_Payments import Member_Payments
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
@@ -15,6 +16,7 @@ class Member_Payment:
         self.paid_on = payment.paid_on
         self.paid = payment.paid
         self.created_on = payment.created_on
+        self.key = (self.member_id, self.group_payment_id)
 
     def __repr__(self) -> str:
         return f"<Member_Payment member_id={self.member_id} group_payment_id={self.group_payment_id} amount={self.amount} paid_on={self.paid_on} paid={self.paid} created_on={self.created_on}>"
@@ -35,7 +37,13 @@ class Member_Payment:
         )
         member_payment.amount = self.amount = amount or member_payment.amount
         
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
         
     def delete(self) -> None:
         """Delete payment using id"""
@@ -46,16 +54,23 @@ class Member_Payment:
         
         db.session.commit()
     
-    def pay(self, amount) -> None:
-        member_payment: Member_Payments = Member_Payments.query.get(
-            (self.member_id,
-            self.group_payment_id)
-        )
+    def pay(self, amount: int or float) -> None:
+        """Add payment, raise Bad_Request if given amount is more than payment amount"""
+        member_payment: Member_Payments = Member_Payments.query.get(self.key)
         new_amount = member_payment.amount - amount
+        
         if new_amount < 0:
-            # Exception
-            return
+            raise Bad_Request("Exceeded amount", "")
+        if new_amount == 0:
+            member_payment.paid = True
+            member_payment.paid_on = now()
         
         member_payment.amount = new_amount
         
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
