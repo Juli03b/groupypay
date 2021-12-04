@@ -2,7 +2,7 @@
 
 import json
 from jsonschema import validate, ValidationError
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import Bad_Request
 
 def get_schema(schema_name: str):
     """Opens and return json schema using name of schema"""
@@ -18,5 +18,5 @@ def validate_json(json_data, schema_name: str):
     try:
         validate(json_data, schema)
     except ValidationError as error:
-        raise BadRequest(error.message, "Invalid data") from error
+        raise Bad_Request(error.message, "Invalid data") from error
     return json_data

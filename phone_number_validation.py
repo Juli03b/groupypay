@@ -2,7 +2,7 @@
 from typing import Tuple
 import phonenumbers
 from phonenumbers.phonenumberutil import NumberParseException
-from exceptions.BadRequest import BadRequest
+from exceptions.Bad_Request import Bad_Request
 
 def validate_phone_number(phone_number: str) -> Tuple:
     """Validates phone number. If invalid, raises error"""
@@ -15,6 +15,6 @@ def validate_phone_number(phone_number: str) -> Tuple:
         if phonenumbers.is_valid_number(phone_number):
             return phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.E164)
     except NumberParseException as error:
-        raise BadRequest(error.args[0], "phone_number") from error
+        raise Bad_Request(error.args[0], "phone_number") from error
 
-    raise BadRequest("Phone number is invalid", "phone_number")
+    raise Bad_Request("Phone number is invalid", "phone_number")

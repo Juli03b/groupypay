@@ -1,6 +1,6 @@
 """Main module for app setup"""
 
-from exceptions.Custom_Error import CustomError
+from exceptions.Custom_Error import Custom_Error
 from flask.json import jsonify
 from os import environ
 from flask import Flask
@@ -24,7 +24,7 @@ connect_db(app), db.create_all() # pylint: disable=W0106
 # Register blueprint for users routes
 app.register_blueprint(users_blueprint, url_prefix="/users")
 
-@app.errorhandler(CustomError)
+@app.errorhandler(Custom_Error)
 def error_handler(error):
     """Error handler for custom errors"""
     error, status_code = error.formated
