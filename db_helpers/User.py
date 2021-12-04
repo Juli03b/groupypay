@@ -41,7 +41,7 @@ class User:
     
     @classmethod
     def sign_in(cls, email: str, password: str):
-        if not Users.query.filter_by(email=email).exists():
+        if not Users.query.filter_by(email=email).count():
             raise Unauthorized("No user with that email has been found", "")
         
         user = Users.authenticate(email, password)
