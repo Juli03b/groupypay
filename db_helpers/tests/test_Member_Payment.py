@@ -85,9 +85,13 @@ class Member_PaymentTestCase(TestCase):
     def test_delete(self) -> None:
         """Test delete method"""
         self.member_payment.delete()
-        member_payment_from_db: Member_Payments = Member_Payments.query.get(
-            (self.group_member.id, 
-            self.group_payment.id)
-        )
+        member_payment_from_db: Member_Payments = Member_Payments.query.get(self.member_payment.key)
         
         self.assertEqual(member_payment_from_db, None, "Test that member_payment cannot be found in database")
+    
+    def test_pay(self) -> None:
+        """Test pay method"""
+        self.member_payment.pay()
+        member_payment_from_db: Member_Payments = Member_Payments.query.get(self.member_payment.key)
+
+        self.assertEqual(self.member_payment.paid, member_payment_from_db.paid, "Check that paid in database and object")
