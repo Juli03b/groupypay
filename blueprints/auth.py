@@ -15,7 +15,14 @@ auth_blueprint = Blueprint("auth", __name__)
 @auth_blueprint.post("/token", strict_slashes=True)
 def get_token():
     """Return token given username and password in request body"""
-    return request.json
+    
+    # Check if JSON request is valid, return error and HTTP code accordingly
+    validate_json(request.json, "auth")
+    
+    user = User.sign_in(request.json["email"], request.json["password"])
+    
+    return jsonify(token=user.password, user_id=user.id)
+
 @auth_blueprint.post("/sign-up", strict_slashes=True)
 def sign_up():
     """Sign up view. Validate json request body and create user if valid"""
