@@ -51,23 +51,8 @@ class Member_Payment:
         
         db.session.commit()
     
-    def pay(self, amount: int or float) -> None:
-        """Add payment, raise Bad_Request if given amount is more than payment amount"""
+    def pay(self) -> None:
+        """Set member_payment to paid"""
         member_payment: Member_Payments = Member_Payments.query.get(self.key)
-        new_amount = member_payment.amount - amount
-        
-        if new_amount < 0:
-            raise Bad_Request("Exceeded amount", "")
-        if new_amount == 0:
-            member_payment.paid = True
-            member_payment.paid_on = now()
-        
-        member_payment.amount = new_amount
-        
-        try:
-            db.session.commit()
-        except IntegrityError as error:
-            db.session.rollback()
-            [message] = error.orig.args
-
-            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
+        member_payment.paid = self.paid = True
+        member_payment.paid_on = self.paid_on = now()
