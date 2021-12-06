@@ -16,6 +16,7 @@ class User:
         self.email = user.email
         self.phone_number = user.phone_number
         self.groups = user.groups
+        self.password = user.password
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number}>"
@@ -51,7 +52,7 @@ class User:
         if not user:
             raise Unauthorized("Wrong password", "Invalid credentials")
         
-        return user
+        return cls(user)
     
     @classmethod
     def get_by_id(cls, id: str):
