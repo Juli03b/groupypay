@@ -1,0 +1,77 @@
+{
+    "$id": "http://json-schema.org/draft-07/schema",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "default": {},
+    "description": "Schema for user",
+    "examples": [
+        {
+            "name": "Julio",
+            "email": "julio@gmail.com",
+            "password": "123Securepassword321",
+            "phone_number": "+1 938-323-321"
+        },
+        {
+            "name": "John Does",
+            "email": "jd@gmail.com",
+            "password": "123Securepassword321"
+        }
+    ],
+    "title": "The user schema",
+    "type": "object",
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "User's name",
+            "default": "",
+            "minLength": 1,
+            "maxLength": 55,
+            "examples": [
+                "Julio",
+                "Jane",
+                "Jon Doe"
+            ]
+        },
+        "email": {
+            "$id": "#/properties/email",
+            "type": "string",
+            "title": "The email schema",
+            "description": "User's email",
+            "default": "",
+            "minLength": 6,
+            "maxLength": 127,
+            "examples": [
+                "julio@gmail.com"
+            ]
+        },
+        "password": {
+            "$id": "#/properties/password",
+            "type": "string",
+            "title": "The password schema",
+            "description": "User's password",
+            "default": "",
+            "examples": [
+                "123Securepassword321",
+                "IaMW@!!",
+                "12345678910111213141516171819"
+            ],
+            "minLength": 5,
+            "maxLength": 20
+        },
+        "phone_number": {
+            "$id": "#/properties/phone_number",
+            "type": "string",
+            "title": "The phone_number schema",
+            "description": "User's phone number",
+            "default": "",
+            "minLength":10,
+            "maxLength":15,
+            "examples": [
+                "+1 938-323-321",
+                "+1 999-999-999"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
