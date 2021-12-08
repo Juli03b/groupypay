@@ -66,8 +66,12 @@ class Users(BaseModel):
     def authenticate(cls, email: str, password: str):
         """Authenticate using email and password, and return user"""
         user = cls.query.filter_by(email=email).first()
-
+        
         if user and bcrypt.check_password_hash(user.password, password):
             return user
 
         return False
+    
+    @staticmethod
+    def make_hashed_password(password: str):
+        return bcrypt.generate_password_hash(password).decode("UTF-8")
