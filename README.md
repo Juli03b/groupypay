@@ -71,15 +71,17 @@
     -> { name, total_amount }
     => { name, total_amount }
 
-###### /groups/<group_id>/payments/member_payments
+###### /groups/<group_id>/payments/<group_payment_id>/member_payments
 
-    GET /groups/<group_id>/payments/member_payments
+    GET /groups/<group_id>/payments/<group_payment_id>/member_payments
     => { [member_id: amount] }
 
-    GET /groups/<group_id>/payments/member_payments/<member_payment_id>
+###### /groups/<group_id>/payments/<group_payment_id>/member_payments/members/<member_id>
+
+    GET /groups/<group_id>/payments/<group_payment_id>/members/<member_id>
     => { amount }
 
-    POST /groups/<group_id>/payments/member_payments
+    POST /groups/<group_id>/payments/<group_payment_id>/members/<member_id>
     -> { amount }
     => { "created": member_payments_id }
     
