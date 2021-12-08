@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from models.main import connect_db, db
 from blueprints.users import users_blueprint
 from blueprints.auth import auth_blueprint
+from blueprints.groups import groups_blueprint
 
 app = Flask(__name__)
 
@@ -25,6 +26,7 @@ connect_db(app), db.create_all() # pylint: disable=W0106
 # Register blueprint for users routes
 app.register_blueprint(users_blueprint, url_prefix="/users")
 app.register_blueprint(auth_blueprint, url_prefix="/auth")
+app.register_blueprint(groups_blueprint, url_prefix="/groups")
 
 @app.errorhandler(Custom_Error)
 def error_handler(error):
