@@ -12,7 +12,7 @@ from exceptions.Bad_Request import Bad_Request
 
 auth_blueprint = Blueprint("auth", __name__)
 
-@auth_blueprint.post("/token", strict_slashes=True)
+@auth_blueprint.post("/token", strict_slashes=False)
 def get_token():
     """Return token given username and password in request body"""
     
@@ -23,7 +23,7 @@ def get_token():
     
     return jsonify(token=user.password, user_id=user.id)
 
-@auth_blueprint.post("/sign-up", strict_slashes=True)
+@auth_blueprint.post("/sign-up", strict_slashes=False)
 def sign_up():
     """Sign up view. Validate json request body and create user if valid"""
 
