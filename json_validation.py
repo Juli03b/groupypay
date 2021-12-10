@@ -13,10 +13,9 @@ def get_schema(schema_name: str):
 
 def validate_json(json_data, schema_name: str):
     """Validates json and returns it if valid. Raises error if not valid"""
-
     schema = get_schema(schema_name)
     try:
         validate(json_data, schema)
-    except ValidationError as error:
+    except ValidationError as error:        
         raise Bad_Request(error.message, "Invalid data") from error
     return json_data
