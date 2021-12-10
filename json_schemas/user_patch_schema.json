@@ -57,7 +57,7 @@
                 "12345678910111213141516171819"
             ],
             "minLength": 5,
-            "maxLength": 20
+            "maxLength": 50
         },
         "phone_number": {
             "$id": "#/properties/phone_number",

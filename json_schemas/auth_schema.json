@@ -5,39 +5,21 @@
     "description": "Schema for user",
     "examples": [
         {
-            "name": "Julio",
             "email": "julio@gmail.com",
-            "password": "123Securepassword321",
-            "phone_number": "+1 938-323-321"
+            "password": "123Securepassword321"
         },
         {
-            "name": "John Does",
             "email": "jd@gmail.com",
             "password": "123Securepassword321"
         }
     ],
     "required": [
-        "name",
         "email",
         "password"
     ],
     "title": "The user schema",
     "type": "object",
     "properties": {
-        "name": {
-            "$id": "#/properties/name",
-            "type": "string",
-            "title": "The name schema",
-            "description": "User's name",
-            "default": "",
-            "minLength": 1,
-            "maxLength": 55,
-            "examples": [
-                "Julio",
-                "Jane",
-                "Jon Doe"
-            ]
-        },
         "email": {
             "$id": "#/properties/email",
             "type": "string",
@@ -62,20 +44,7 @@
                 "12345678910111213141516171819"
             ],
             "minLength": 5,
-            "maxLength": 20
-        },
-        "phone_number": {
-            "$id": "#/properties/phone_number",
-            "type": "string",
-            "title": "The phone_number schema",
-            "description": "User's phone number",
-            "default": "",
-            "minLength":10,
-            "maxLength":15,
-            "examples": [
-                "+1 938-323-321",
-                "+1 999-999-999"
-            ]
+            "maxLength": 50
         }
     },
     "additionalProperties": true
