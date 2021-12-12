@@ -21,7 +21,9 @@ def get_token():
     
     user = User.sign_in(request.json["email"], request.json["password"])
     
-    return jsonify(token=user.password, user_id=user.id)
+    del user.password
+
+    return jsonify(token=create_access_token(user.__dict__))
 
 @auth_blueprint.post("/sign-up", strict_slashes=False)
 def sign_up():
