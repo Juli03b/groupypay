@@ -1,10 +1,13 @@
 """Main module for app setup"""
 
+from db_helpers.User import User
 from exceptions.Custom_Error import Custom_Error
 from flask.json import jsonify
 from os import environ
-from flask import Flask
+from flask import Flask, request
 from flask_jwt_extended import JWTManager
+from functools import wraps
+from exceptions.Unauthorized import Unauthorized
 from models.main import connect_db, db
 from blueprints.users import users_blueprint
 from blueprints.auth import auth_blueprint
