@@ -2,7 +2,6 @@
 
 import sys
 
-from db_helpers.Group_Member import Group_Member
 
 sys.path.append("../..")
 
@@ -13,6 +12,7 @@ from models.Users import Users
 from models.Member_Payments import Member_Payments
 from db_helpers.Group import Group
 from db_helpers.User import User
+from db_helpers.Group_Member import Group_Member
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groupypay_test'
 app.config['SQLALCHEMY_ECHO'] = False
@@ -56,9 +56,9 @@ class Group_MemberTestCase(TestCase):
     
     def test_get_by_id(self) -> None:
         """Test get_by_id method"""
-        group_member = Group_Member.get_by_id(self.group_member.id)
+        group_member = Group_Member.get_by_id(self.group_member.id, self.group.id)
         
-        self.assertEqual(group_member.id, self.group_member.id, "Test that group_member has the same id as the class's group_member")
+        self.assertEqual(group_member.key, (self.group_member.id, self.group.id), "Test that group_member has the same id as the class's group_member")
     
     def test_edit(self) -> None:
         """Test edit method"""

@@ -2,6 +2,7 @@
 
 import sys
 
+
 sys.path.append("../..")
 
 from unittest import TestCase
@@ -12,6 +13,7 @@ from models.Groups import Groups
 from models.Group_Payments import Group_Payments
 from db_helpers.Group import Group
 from db_helpers.User import User
+from exceptions.Bad_Request import Bad_Request
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///groupypay_test'
 app.config['SQLALCHEMY_ECHO'] = False

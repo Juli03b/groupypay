@@ -1,7 +1,6 @@
 """Unit test for Group_Payment class"""
 
 import sys
-from db_helpers.Group_Payment import Group_Payment
 
 sys.path.append("../..")
 
@@ -11,6 +10,7 @@ from models.Group_Payments import Group_Payments
 from models.Group_Members import Group_Members
 from models.Users import Users
 from models.Member_Payments import Member_Payments
+from db_helpers.Group_Payment import Group_Payment
 from db_helpers.Group import Group
 from db_helpers.User import User
 

@@ -1,8 +1,8 @@
 """Unit test for User class"""
 
 import sys
-sys.path.append("../..")
 
+sys.path.append("../..")
 
 from exceptions.Bad_Request import Bad_Request
 from exceptions.Unauthorized import Unauthorized
@@ -87,7 +87,6 @@ class UserTestCase(TestCase):
         new_user = User.sign_up(**dict(name="new_user!", email="another@user", password="forTests", phone_number="0031"))
         #Test that editing phone number to one that is in use raises a Bad_Request
         self.assertRaises(Bad_Request, new_user.edit, phone_number=demo_user_json["phone_number"])
-        
         
     def test_delete(self) -> None:
         """Test delete method"""
