@@ -15,7 +15,7 @@
     => { token }
 
 ## Users
-###### /users/<email>
+###### /users/<**email**>
 
     GET /users/<email>
     => { name, email, phone_number, created_on }
@@ -24,13 +24,13 @@
     -> { name, email, phone_number }
     => { name, email, phone_number }
 
-###### /users/<id>/groups
+###### /users/<**id**>/groups
     POST /users/<id>/groups
     -> { name, description } 
     => { "created": group_id }
 
 ## Groups
-###### /groups/<group_id>
+###### /groups/<**group_id**>
 
     GET /groups/<group_id>
     => { name, description, members, payments }
@@ -39,7 +39,7 @@
     -> { name, description } 
     => { name, description} 
 
-###### /groups/<group_id>/members
+###### /groups/<**group_id**>/members
 
     GET /groups/<group_id>/members
     => { members }
@@ -55,7 +55,7 @@
     -> { name, email, phone_number } 
     => { name, email, phone_number }
 
-###### /groups/<group_id>/payments
+###### /groups/<**group_id**>/payments
 
     GET /groups/<group_id>/payments
     => { payments }
@@ -71,12 +71,12 @@
     -> { name, total_amount }
     => { name, total_amount }
 
-###### /groups/<group_id>/payments/<group_payment_id>/member_payments
+###### /groups/<**group_id**>/payments/<**group_payment_id**>/member_payments
 
     GET /groups/<group_id>/payments/<group_payment_id>/member_payments
     => { [member_id: amount] }
 
-###### /groups/<group_id>/payments/<group_payment_id>/member_payments/members/<member_id>
+###### /groups/<**group_id**>/payments/<**group_payment_id**>/member_payments/members/<**member_id**>
 
     GET /groups/<group_id>/payments/<group_payment_id>/members/<member_id>
     => { amount }
