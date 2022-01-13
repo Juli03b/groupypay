@@ -35,7 +35,6 @@ class authTestCase(TestCase):
         """Test sign up view"""
         data = dict(name="3424", email="JDWWO@gmail.com", password="231313232", phone_number="+1 831-322-2311")
         with app.test_client() as client:
-            # os.chdir("../..") # Change directory to groupypay to access json
             res = client.post('/auth/sign-up', data=dumps(data), content_type='application/json')
             json = res.get_json()
 
@@ -65,6 +64,7 @@ class authTestCase(TestCase):
             
             self.assertEqual(res.status_code, 400, "Test that Bad Request was returned")
             self.assertEqual(json["error"]["message"], "'1234' is too short", "Test that the right message was returned")
+            
     def test_get_token(self):
         """Test token view"""
         
@@ -72,9 +72,8 @@ class authTestCase(TestCase):
 
             res = client.post('/auth/token', data=dumps(dict(email=self.user.email, password=self.password)), content_type='application/json')
             json = res.get_json()
-            
+
             self.assertIn("token", json, "Test that JSON contains token")
-            self.assertIn("user_id", json, "Test that JSON contains user_id")
             self.assertEqual(res.status_code, 200, "Test that status code is correct")
             
             # Test non-existent user - email
