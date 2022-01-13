@@ -15,12 +15,12 @@
     => { token }
 
 ## Users
-###### /users/<id>
+###### /users/<email>
 
-    GET /users/<id>
+    GET /users/<email>
     => { name, email, phone_number, created_on }
 
-    PATCH /users/<id> 
+    PATCH /users/<email> 
     -> { name, email, phone_number }
     => { name, email, phone_number }
 
