@@ -24,7 +24,7 @@
     -> { name, email, phone_number }
     => { name, email, phone_number }
 
-###### /users/<**id**>/groups
+###### /users/<**email**>/groups
     POST /users/<id>/groups
     -> { name, description } 
     => { "created": group_id }
