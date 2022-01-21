@@ -25,9 +25,13 @@
     => { name, email, phone_number }
 
 ###### /users/<**email**>/groups
+    GET /users/<id>/groups -Requires user logged in
+    => { "groups": group[]}
+
     POST /users/<id>/groups
     -> { name, description } 
     => { "created": group_id }
+
 
 ## Groups
 ###### /groups/<**group_id**>
