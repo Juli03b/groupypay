@@ -24,10 +24,12 @@ class Group_Member:
     @classmethod
     def get_by_id(cls, id: int, group_id: int):
         """Return a Group_Member using a id and group id"""
+        group_member: Group_Members = Group_Members.query.get((id, group_id))
         
-        payment: Group_Members = Group_Members.query.get((id, group_id))
+        if not group_member:
+            raise Bad_Request(f"Group member with id {id} in group with id {group_id} was not found")
         
-        return cls(payment)
+        return cls(group_member)
  
     def edit(self, name:str=None, email: str=None, phone_number: str=None) -> None:
         """Edit member"""
