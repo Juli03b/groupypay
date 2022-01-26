@@ -46,3 +46,24 @@ class Group_Payment:
         
         Group_Payments.query.filter_by(id=self.id, group_id=self.group_id).delete()
         db.session.commit()
+        
+    def add_member_payments(self, member_payments):
+        """Add member payments"""
+        group_payment: Group_Payments = Group_Payments.query.get(self.key)
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!GROUP PAYMENT", group_payment, "GROUP PAYMENT!!!!!!!!!!!!!!!!!!!!!!!!!")
+        member_payments_sql = []
+        for member_id in member_payments:
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!M MEBEBER IDDD ", member_id, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            member_payment = Member_Payments(member_id=member_id, group_payment_id=self.group_id, amount=member_payments[member_id])
+            
+            group_payment.member_payments.append(member_payment)
+            
+        db.session.add(group_payment)
+        
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
