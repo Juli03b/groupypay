@@ -36,4 +36,4 @@ class Groups(BaseModel):
     members = db.relationship("Group_Members", backref="group", passive_deletes=True)
     payments = db.relationship("Group_Payments", backref="group")
     def __repr__(self):
-        return f'<Groups id={self.id} user_id={self.user_id} name={self.name} description={self.description} created_on={self.created_on}>'
+        return f'<Groups id={self.id} user_id={self.user_id} name={self.name} description={self.description} created_on={self.created_on} members={self.members}>'
