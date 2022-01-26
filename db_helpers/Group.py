@@ -9,6 +9,8 @@ from models.Group_Payments import Group_Payments
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 
+row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+
 class Group:
     """Class for logic abstraction from views"""
     
@@ -18,8 +20,8 @@ class Group:
         self.user_id = group.user_id
         self.description = group.description
         self.created_on = group.created_on
-        self.members: List[Group_Members] = group.members
-        self.payments: List[Group_Payments] = group.payments
+        self.members: List[Group_Members] = list(map(row2dict, group.members))
+        self.payments: List[Group_Payments] = list(map(row2dict, group.payments))
     
     def __repr__(self) -> str:
         return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on}>"
@@ -28,7 +30,8 @@ class Group:
     def get_by_id(cls, id: int):
         """Return a group using an id"""
         group = Groups.query.filter_by(id=id).first()
-
+        if not group:
+            raise Bad_Request(f"Group with id {id} does not exist")
         return cls(group)
     
     def edit(self, name: str=None, description: str=None) -> None:
@@ -37,7 +40,13 @@ class Group:
         group.name = self.name = name or group.name
         group.description = self.description = description or group.description
     
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
     
     def delete(self) -> None:
         """Delete group"""
@@ -54,7 +63,7 @@ class Group:
         
         db.session.add(payment)
         db.session.commit()
-        
+        print("PAYMENT!!!!!!!!!!!!!!!!!!!!!!!", payment, "PAYMENT!!!!!!!!!!!!!!!!!!!!!!!")
         return Group_Payment(payment)
     
     def add_member(self, name: str, email: str, phone_number: str) -> Group_Member:
@@ -67,6 +76,13 @@ class Group:
         )
         
         db.session.add(member)
-        db.session.commit()
+        
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
         
         return Group_Member(member)
