@@ -1,11 +1,13 @@
 """Module for User class"""
 
+from flask_jwt_extended.utils import decode_token
 from exceptions.Unauthorized import Unauthorized
 from models.Groups import Groups
 from db_helpers.Group import Group
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Users import Users, db
+row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
 
 class User:
     """Class for logic abstraction from views"""
@@ -15,11 +17,18 @@ class User:
         self.name = user.name
         self.email = user.email
         self.phone_number = user.phone_number
-        self.groups = user.groups
         self.password = user.password
-
+        self.groups = list(map(row2dict, user.groups))
+        
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number}>"
+    
+    @classmethod
+    def authenticate_token(cls, token: str):
+        """Return a User using a token"""
+        user = decode_token(token)
+
+        return cls.get_by_email(user["sub"]["email"])
     
     @classmethod
     def sign_up(cls, **validated_json):
@@ -55,18 +64,33 @@ class User:
         return cls(user)
     
     @classmethod
-    def get_by_id(cls, id: str):
+    def get_by_id(cls, id: int):
         """Return a user using an id"""
         user: Users = Users.query.filter_by(id=id).first()
-        
+        if not user:
+            raise Bad_Request(f"User with id {id} does not exist")
         return cls(user)
     
-    def edit(self, name: str=None, email: str=None, phone_number: str=None) -> None:
+    @classmethod
+    def get_by_email(cls, email: str):
+        """Return a user using an email"""
+        user: Users = Users.query.filter_by(email=email).first()
+        if not user:
+            raise Bad_Request(f"User with email {email} does not exist")
+                
+        return cls(user)
+    
+    def edit(self, name: str=None, email: str=None, phone_number: str=None, password: str=None) -> None:
         """Edit group"""
         user: Users = Users.query.filter_by(id=self.id).first()
         user.name = self.name = name or user.name
         user.email = self.email = email or user.email
         user.phone_number = self.phone_number = phone_number
+        
+        if password:
+            password = Users.make_hashed_password(password)
+
+        user.password = self.password = user.password
         
         try:
             db.session.commit()

@@ -1,9 +1,12 @@
 """Module for Custom_Error exception"""
 
+from typing import Literal
+
+
 class Custom_Error(Exception):
     """Implement custom exceptions with this class"""
 
-    def __init__(self, message: str, cause: str, status_code: int, **kwargs) -> None:
+    def __init__(self, message: str, cause: Literal["Authentication", "Database"], status_code: int, **kwargs) -> None:
         self.message = message
         self.cause = cause
         self.status_code = status_code
