@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "Schema for groups",
+    "default": {},
+    "examples": [
+        {
+            "name": "Vacay in LA",
+            "description": "WERE IN LA"
+        }
+    ],
+    "required": [
+        "name"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "title": "The name schema",
+            "description": "Name of the group",
+            "default": "",
+            "examples": [
+                "Vacay in LA"
+            ]
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "maxLength": 200,
+            "title": "The description schema",
+            "description": "Short description of the group",
+            "default": "",
+            "examples": [
+                "WERE IN LA"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
