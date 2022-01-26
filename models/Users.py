@@ -45,7 +45,7 @@ class Users(BaseModel):
         return f'<Users id={self.id} name={self.name} email={self.email} phone_number={self.phone_number} created_on={self.created_on}>'
 
     @classmethod
-    def sign_up(cls, name: str, email: str, password: str, phone_number: str=None):
+    def sign_up(cls, name: str, email: str, password: str, phone_number: str=None, **kwargs):
 
         # Create hashed password from plain text password
         hashed_password = bcrypt.generate_password_hash(password).decode("UTF-8")
