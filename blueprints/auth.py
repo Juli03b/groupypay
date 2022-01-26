@@ -23,30 +23,30 @@ def get_token():
     
     del user.password
 
-    return jsonify(token=create_access_token(user.__dict__))
+    return jsonify(token=create_access_token(user.__dict__, expires_delta=False))
 
 @auth_blueprint.post("/sign-up", strict_slashes=False)
 def sign_up():
     """Sign up view. Validate json request body and create user if valid"""
 
     # Check if JSON request is valid, return error and HTTP code accordingly
-    validate_json(request.json, "auth")
-
+    valid_json = validate_json(request.json, "auth")
+    
     # Parse and validate phone number if exists
-    if phone_number := request.json.get("phone_number"):
+    if phone_number := valid_json.get("phone_number"):
         formated_number = validate_phone_number(phone_number)
-        request.json["phone_number"] = formated_number
+        valid_json["phone_number"] = formated_number
 
     try:
-        validate_email(request.json.get("email"))
+        validate_email(valid_json.get("email"))
     except EmailNotValidError as error:
         raise Bad_Request(message=str(error), cause="email") from error
 
-    user = User.sign_up(**request.json)
-    access_token = create_access_token(user.email)
+    user = User.sign_up(**valid_json)
+    access_token = create_access_token(user.__dict__, expires_delta=False)
     warning = dict(message="Phone number was not provided, none saved", cause="phone_number")
 
     return jsonify(
         message="Sign up successful",
-        warning=warning if not request.json.get("phone_number") else None,
-        access_token=access_token), 201
+        warning=warning if not valid_json.get("phone_number") else None,
+        token=access_token), 201
