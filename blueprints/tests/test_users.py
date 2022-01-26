@@ -1,9 +1,6 @@
 """Test users views"""
 
-import os
 import sys
-
-from flask_jwt_extended.utils import decode_token
 
 sys.path.append("../..")
 
