@@ -21,11 +21,13 @@ class Group_Members(BaseModel):
     )
     email: str = db.Column(
         db.String(127),
-        nullable=False
+        nullable=False,
+        unique=True
     )
     phone_number: str = db.Column(
         db.String(),
         nullable=True,
+        unique=True
     )
     added_on = db.Column(
         db.DateTime(timezone=True),
