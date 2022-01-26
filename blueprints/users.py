@@ -8,6 +8,7 @@ from blueprints.helper import require_same_user_as_email
 from json_validation import validate_json
 from db_helpers.User import User
 from exceptions.Bad_Request import Bad_Request
+from flask_jwt_extended import jwt_required
 
 users_blueprint = Blueprint("users", __name__)
 
@@ -38,12 +39,20 @@ def patch_user(email: str):
     del user.password
     return jsonify(user.__dict__), 200
 
-@users_blueprint.post("/<id>/groups", strict_slashes=False)
+@users_blueprint.get("/<email>/groups", strict_slashes=False)
 @require_same_user_as_email
-def make_group(id):
+def get_groups(email: str):
     """Make a group"""
+    user = User.get_by_email(email)
+    print("GROUPS!!!!!!!!!!!!!!!!!", user.groups, "GROUPS!!!!!!!!!!!!!!!!!")
+    return jsonify(user.groups ), 200
+
+@users_blueprint.post("/<email>/groups", strict_slashes=False)
+@require_same_user_as_email
+def make_group(email: str):
+    """Make a group"""
+    validate_json(request.json, "group")
+    user = User.get_by_email(email)
+    group = user.make_group(request.json.get("name"), request.json.get("description"))
     
-    user = User.get_by_id(id)
-    user.make_group(request.json.get("name"), request.json.get("description"))
-    
-    return jsonify(message="Group was created succesfully"), 201
+    return jsonify(group.__dict__), 201
