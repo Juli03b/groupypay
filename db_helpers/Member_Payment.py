@@ -59,10 +59,24 @@ class Member_Payment:
             group_payment_id = self.group_payment_id
         ).delete()
         
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
     
     def pay(self) -> None:
         """Set member_payment to paid"""
         member_payment: Member_Payments = Member_Payments.query.get(self.key)
         member_payment.paid = self.paid = True
         member_payment.paid_on = self.paid_on = now()
+
+        try:
+            db.session.commit()
+        except IntegrityError as error:
+            db.session.rollback()
+            [message] = error.orig.args
+
+            raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
