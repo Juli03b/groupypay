@@ -44,7 +44,7 @@ def sign_up():
 
     user = User.sign_up(**valid_json)
     access_token = create_access_token(user.__dict__, expires_delta=False)
-    warning = dict(message="Phone number was not provided, none saved", cause="phone_number")
+    warning = "Phone number was not provided, none saved"
 
     return jsonify(
         message="Sign up successful",
