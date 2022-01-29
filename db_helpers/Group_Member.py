@@ -1,12 +1,26 @@
 """Module for Group_Members model"""
 
+from typing import Any
 from models.Member_Payments import Member_Payments
 from db_helpers.Member_Payment import Member_Payment
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Group_Members import Group_Members, db
+from dataclasses import dataclass
 
+row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+
+@dataclass
 class Group_Member:
+    
+    id: int
+    group_id: int
+    name: str
+    email: str
+    phone_number: str
+    added_on: str
+    payments: Any
+    
     """Class for logic abstraction from views"""
     
     def __init__(self, member: Group_Members):
@@ -17,6 +31,7 @@ class Group_Member:
         self.phone_number = member.phone_number
         self.added_on = member.added_on
         self.key = (self.id, self.group_id)
+        self.payments = [Member_Payment(payment) for payment in member.payments]
         
     def __repr__(self) -> str:
         return f"<Group_Member id={self.id} group_id={self.group_id} name={self.name} email={self.email} phone_number={self.phone_number} added_on={self.added_on}>"

@@ -1,5 +1,6 @@
 """Module for User class"""
 
+from typing import Any, List
 from flask_jwt_extended.utils import decode_token
 from exceptions.Unauthorized import Unauthorized
 from models.Groups import Groups
@@ -7,10 +8,20 @@ from db_helpers.Group import Group
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Users import Users, db
+from dataclasses import dataclass
+
 row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
 
+@dataclass
 class User:
     """Class for logic abstraction from views"""
+    
+    id: int
+    name: str
+    email: str
+    phone_number: str
+    password: str
+    groups: Any
     
     def __init__(self, user: Users):
         self.id = user.id
@@ -18,10 +29,10 @@ class User:
         self.email = user.email
         self.phone_number = user.phone_number
         self.password = user.password
-        self.groups = list(map(row2dict, user.groups))
+        self.groups = [Group(group) for group in user.groups]
         
     def __repr__(self) -> str:
-        return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number}>"
+        return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number} groups={self.groups}>"
     
     @classmethod
     def authenticate_token(cls, token: str):

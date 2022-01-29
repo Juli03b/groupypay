@@ -5,14 +5,24 @@ from models.Member_Payments import Member_Payments
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Group_Payments import Group_Payments, db
+from dataclasses import dataclass
 
+@dataclass
 class Member_Payment:
+    
+    member_id: int
+    group_payment_id: int
+    amount: float
+    paid_on: str
+    paid: bool
+    created_on: str
+    
     """Class for logic abstraction from views"""
     
     def __init__(self, payment: Member_Payments):
         self.member_id = payment.member_id
         self.group_payment_id = payment.group_payment_id
-        self.amount = payment.amount
+        self.amount = float(payment.amount)
         self.paid_on = payment.paid_on
         self.paid = payment.paid
         self.created_on = payment.created_on
