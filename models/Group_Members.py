@@ -1,6 +1,8 @@
 from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
+from dataclasses import dataclass
 
+@dataclass
 class Group_Members(BaseModel):
     __tablename__ = "group_members"
 

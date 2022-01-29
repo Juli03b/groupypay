@@ -1,6 +1,10 @@
+from dataclasses import dataclass
+from decimal import Decimal
+import json
 from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
 
+@dataclass
 class Member_Payments(BaseModel):
     __tablename__ = "member_payments"
 
@@ -16,7 +20,7 @@ class Member_Payments(BaseModel):
         primary_key=True
     )
 
-    amount: float = db.Column(
+    amount: Decimal = db.Column(
         db.Numeric(15, 6),
         nullable=False
     )

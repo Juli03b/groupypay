@@ -1,9 +1,10 @@
 from models.main import db, BaseModel
 from sqlalchemy.sql.functions import now
 from flask_bcrypt import Bcrypt
+from dataclasses import dataclass
 
 bcrypt = Bcrypt()
-
+@dataclass
 class Users(BaseModel):
     __tablename__ = "users"
 
