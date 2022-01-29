@@ -23,7 +23,6 @@ app.config["JWT_SECRET_KEY"] = environ.get("JWT_SECRET_KEY", "secret-af")
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL', 'postgresql:///groupypay')
 
 CORS(app)
-
 JWTManager(app)
 
 # Connect db with app, create tables
