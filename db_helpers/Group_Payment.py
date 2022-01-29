@@ -76,6 +76,7 @@ class Group_Payment:
         
         try:
             db.session.commit()
+            self.member_payments = [Member_Payment(member_payment) for member_payment in group_payment.member_payments]
         except IntegrityError as error:
             db.session.rollback()
             [message] = error.orig.args
