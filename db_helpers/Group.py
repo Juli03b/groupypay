@@ -1,6 +1,7 @@
 """Module for Group class"""
 
-from typing import List
+from dataclasses import dataclass
+from typing import Any, List
 from models.Group_Members import Group_Members
 from db_helpers.Group_Member import Group_Member
 from db_helpers.Group_Payment import Group_Payment
@@ -11,7 +12,17 @@ from sqlalchemy.exc import IntegrityError
 
 row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
 
+@dataclass
 class Group:
+    
+    id: int
+    name: str
+    user_id: int
+    description: str
+    created_on: str
+    members: Any
+    payments: Any
+    
     """Class for logic abstraction from views"""
     
     def __init__(self, group: Groups):
@@ -20,8 +31,8 @@ class Group:
         self.user_id = group.user_id
         self.description = group.description
         self.created_on = group.created_on
-        self.members: List[Group_Members] = list(map(row2dict, group.members))
-        self.payments: List[Group_Payments] = list(map(row2dict, group.payments))
+        self.members: List[Group_Member] = {member.id: Group_Member(member) for member in group.members}
+        self.payments: List[Group_Payments] = [Group_Payment(payment) for payment in group.payments] # instantiate to group payment helper first
     
     def __repr__(self) -> str:
         return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on}>"
@@ -53,10 +64,11 @@ class Group:
         Groups.query.filter_by(id=self.id).delete()
         db.session.commit()
         
-    def add_payment(self, name: str, total_amount: float or int) -> Group_Payment:
+    def add_payment(self, name: str, total_amount: float or int, member_id: int) -> Group_Payment:
         """Create and add payment to group"""
         payment = Group_Payments(
             group_id=self.id,
+            member_id=member_id,
             name=name,
             total_amount=total_amount
         )
