@@ -111,7 +111,7 @@ def add_group_payment(group_id: int):
     group_payment.add_member_payments(request.json["member_payments"])
     group_payment.total_amount = str(group_payment.total_amount)
     
-    return jsonify(group_payment.__dict__)
+    return jsonify(group_payment)
 
 @require_token
 @require_same_id
