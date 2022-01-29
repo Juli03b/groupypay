@@ -24,8 +24,6 @@ def require_token(f):
 def require_same_id(f):
     @wraps(f)
     def decorated_function1(*args, **kwargs):
-        print("********ARGSARGSARGS***********", args, "KKWEAHHEHAHEDHD", kwargs)
-
         if Group.get_by_id(12).user_id != User.authenticate_token(request.json.get("token")).id:
             raise Unauthorized("You do not own this group")
         return f(*args, **kwargs)
@@ -33,6 +31,7 @@ def require_same_id(f):
 
 @groups_blueprint.get("/<id>")
 def get_group(id: str):
+
     return jsonify(Group.get_by_id(id).__dict__)
 
 @require_token
@@ -67,7 +66,6 @@ def get_member(group_id: int, member_id: int):
 @groups_blueprint.post("/<group_id>/members")
 def add_member(group_id: int):
     validate_json(request.json, "user_patch")
-    print("GROUP GROUP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", request.json)
     group = Group.get_by_id(group_id)
     member = group.add_member(request.json.get("name"), request.json.get("email"), request.json.get("phone_number"))
     
@@ -108,7 +106,7 @@ def add_group_payment(group_id: int):
         raise Bad_Request("Missing information")
 
     group = Group.get_by_id(group_id)
-    group_payment = group.add_payment(request.json["name"], request.json["total_amount"])
+    group_payment = group.add_payment(request.json["name"], request.json["total_amount"], request.json["member_id"])
     
     group_payment.add_member_payments(request.json["member_payments"])
     group_payment.total_amount = str(group_payment.total_amount)
