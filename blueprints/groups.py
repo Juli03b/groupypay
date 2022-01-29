@@ -14,6 +14,7 @@ from db_helpers.Group import Group
 from db_helpers.Group_Member import Group_Member
 
 groups_blueprint = Blueprint("groups", __name__)
+
 def require_token(f):
     @wraps(f)
     def decorated_function2(*args, **kwargs):
@@ -31,9 +32,8 @@ def require_same_id(f):
 
 @groups_blueprint.get("/<id>")
 def get_group(id: str):
-
     return jsonify(Group.get_by_id(id).__dict__)
-
+    
 @require_token
 @require_same_id
 @groups_blueprint.patch("/<id>")
@@ -159,3 +159,11 @@ def make_member_payment(group_payment_id: int, member_id):
     
     return jsonify(member_payment=member_payment)
 
+@groups_blueprint.post("/<group_id>/payments/<group_payment_id>/member-payments/<member_id>/pay", strict_slashes=False)
+def pay_payment(group_id, group_payment_id: int, member_id):
+    """Pay processes"""
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    member_payment = Member_Payment.get_by_id(member_id, group_payment_id)
+    member_payment.pay()
+    
+    return jsonify("Payed"), 200
