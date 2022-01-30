@@ -166,4 +166,4 @@ def pay_payment(group_id, group_payment_id: int, member_id):
     member_payment = Member_Payment.get_by_id(member_id, group_payment_id)
     member_payment.pay()
     
-    return jsonify("Payed"), 200
+    return jsonify("Paid"), 200
