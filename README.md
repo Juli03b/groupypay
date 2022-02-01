@@ -3,6 +3,18 @@
 ##### [Project Proposal](https://docs.google.com/document/d/19wXtWJ9NHFtTfDz1IKj0VKmun3Juh7XLW_fb0V8K8dA/edit?usp=sharing)
 ##### [Database Diagram](https://i.ibb.co/XbYGdYk/groupypay-database-diagram.png)
 
+## To run server
+1. git clone `https://github.com/Juli03b/groupypay.git`
+2. cd groupypay
+3. source venv/bin/activate
+4. pip3 install -r requirements.txt
+3. flask run
+
+## Tech stack
+- Flask
+- Postgresql
+- SQLAlchemy
+
 # Routes  
 
 ## Auth
