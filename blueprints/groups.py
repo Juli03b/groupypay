@@ -65,7 +65,6 @@ def get_member(group_id: int, member_id: int):
 @require_same_id
 @groups_blueprint.post("/<group_id>/members")
 def add_member(group_id: int):
-    print("i1amHEre", request.json)
     validate_json(request.json, "group_member")
     group = Group.get_by_id(group_id)
     member = group.add_member(request.json.get("name"), request.json.get("email"), request.json.get("phone_number"))
