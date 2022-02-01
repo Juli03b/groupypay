@@ -7,6 +7,7 @@ from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Group_Payments import Group_Payments, db
 from dataclasses import dataclass
+from sqlalchemy.sql.functions import now
 
 @dataclass
 class Group_Payment:
@@ -68,8 +69,11 @@ class Group_Payment:
         group_payment: Group_Payments = Group_Payments.query.get(self.key)
         
         for member_id in member_payments:
-            member_payment = Member_Payments(member_id=member_id, group_payment_id=self.group_id, amount=member_payments[member_id])
-            
+            member_payment: Member_Payments = Member_Payments(member_id=member_id, group_payment_id=self.group_id, amount=member_payments[member_id])
+            if member_payment.member_id == group_payment.member_id:
+                member_payment.paid = True
+                member_payment.paid_on = now()
+                
             group_payment.member_payments.append(member_payment)
             
         db.session.add(group_payment)

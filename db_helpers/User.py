@@ -20,7 +20,6 @@ class User:
     name: str
     email: str
     phone_number: str
-    password: str
     groups: Any
     
     def __init__(self, user: Users):
@@ -90,6 +89,14 @@ class User:
             raise Bad_Request(f"User with email {email} does not exist")
                 
         return cls(user)
+    
+    @classmethod
+    def search_users(cls, name: str):
+        """Search and return users"""
+        
+        users: List[Users] = Users.query.filter(Users.tags.like(name)).all()
+        
+        return users
     
     def edit(self, name: str=None, email: str=None, phone_number: str=None, password: str=None) -> None:
         """Edit group"""
