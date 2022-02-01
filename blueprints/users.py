@@ -56,3 +56,11 @@ def make_group(email: str):
     group = user.make_group(request.json.get("name"), request.json.get("description"))
     
     return jsonify(group.__dict__), 201
+
+@users_blueprint.get("/")
+def search_users(name: str):
+    """Search for users - name support only for now"""
+    name = request.json.get("name")
+    users = User.search_users(name)
+    
+    return jsonify(users)
