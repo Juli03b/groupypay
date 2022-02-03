@@ -26,7 +26,8 @@ CORS(app)
 JWTManager(app)
 
 # Connect db with app, create tables
-connect_db(app), db.create_all() # pylint: disable=W0106
+connect_db(app)
+db.create_all()
 
 # Register blueprint for users routes
 app.register_blueprint(users_blueprint, url_prefix="/users")
