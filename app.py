@@ -20,7 +20,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = environ.get('SECRET_KEY', 'its_a_secret')
 app.config["JWT_SECRET_KEY"] = environ.get("JWT_SECRET_KEY", "secret-af")
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI', 'postgresql:///groupypay')
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL', 'postgresql:///groupypay')
 
 CORS(app)
 JWTManager(app)
