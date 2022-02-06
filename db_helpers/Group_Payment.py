@@ -66,14 +66,18 @@ class Group_Payment:
         
     def add_member_payments(self, member_payments):
         """Add member payments"""
-        group_payment: Group_Payments = Group_Payments.query.get(self.key)
+        group_payment: Group_Payments = Group_Payments.query.filter_by(id=self.id, group_id=self.group_id).first()
         
         for member_id in member_payments:
-            member_payment: Member_Payments = Member_Payments(member_id=member_id, group_payment_id=self.group_id, amount=member_payments[member_id])
-            if member_payment.member_id == group_payment.member_id:
-                member_payment.paid = True
-                member_payment.paid_on = now()
-                
+            is_payer = int(member_id) == group_payment.member_id
+
+            member_payment: Member_Payments = Member_Payments(
+                member_id=member_id, 
+                group_payment_id=self.group_id, 
+                amount=member_payments[member_id],
+                paid=is_payer,
+                paid_on=now() if is_payer else None
+            )
             group_payment.member_payments.append(member_payment)
             
         db.session.add(group_payment)
@@ -86,3 +90,8 @@ class Group_Payment:
             [message] = error.orig.args
 
             raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
+
+    def get_member_payment(self, member_id):
+        member_payment = Member_Payments.query.filter_by(group_payment_id=self.id, member_id=member_id).first()
+        
+        return Member_Payment(member_payment)
