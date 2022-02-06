@@ -12,13 +12,13 @@ class Groups(BaseModel):
         db.Integer(),
         primary_key=True,
         autoincrement=True,
-        unique=True
+        unique=True,
+        index=True
     )
     
     user_id: int = db.Column(
         db.Integer(),
         db.ForeignKey("users.id", ondelete="CASCADE"),
-        primary_key=True
     )
     
     name: str = db.Column(
