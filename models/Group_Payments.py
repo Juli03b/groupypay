@@ -28,11 +28,11 @@ class Group_Payments(BaseModel):
         db.String(45),
         nullable=False
     )
-    total_amount: Decimal = db.Column(
-        db.Numeric(15, 6),
+    total_amount: str = db.Column(
+        db.String(),
         nullable=True
     )
-    created_on = db.Column(
+    created_on: str = db.Column(
         db.DateTime(timezone=True),
         default=now()
     )
