@@ -16,8 +16,8 @@ users_blueprint = Blueprint("users", __name__)
 def get_user(email: str):
     """Get user information"""
     user = User.get_by_email(email)
-    del user.password
-    return jsonify(user.__dict__)
+    print("USSERUUSUUSUUSUSU!!!!!!", user, "USSERUUSUUSUUSUSU!!!!!!")
+    return jsonify(user)
 
 @users_blueprint.patch("/<email>", strict_slashes=False)
 @require_same_user_as_email
@@ -39,23 +39,23 @@ def patch_user(email: str):
     del user.password
     return jsonify(user.__dict__), 200
 
-@users_blueprint.get("/<email>/groups", strict_slashes=False)
-@require_same_user_as_email
-def get_groups(email: str):
-    """Make a group"""
-    user = User.get_by_email(email)
-    print("GROUPS!!!!!!!!!!!!!!!!!", user.groups, "GROUPS!!!!!!!!!!!!!!!!!")
-    return jsonify(user.groups ), 200
+# @users_blueprint.get("/<email>/groups", strict_slashes=False)
+# @require_same_user_as_email
+# def get_groups(email: str):
+#     """Make a group"""
+#     user = User.get_by_email(email)
+#     print("GROUPS!!!!!!!!!!!!!!!!!", user.groups, "GROUPS!!!!!!!!!!!!!!!!!")
+#     return jsonify(user.groups ), 200
 
-@users_blueprint.post("/<email>/groups", strict_slashes=False)
-@require_same_user_as_email
-def make_group(email: str):
-    """Make a group"""
-    validate_json(request.json, "group")
-    user = User.get_by_email(email)
-    group = user.make_group(request.json.get("name"), request.json.get("description"))
+# @users_blueprint.post("/<email>/groups", strict_slashes=False)
+# @require_same_user_as_email
+# def make_group(email: str):
+#     """Make a group"""
+#     validate_json(request.json, "group")
+#     user = User.get_by_email(email)
+#     group = user.make_group(request.json.get("name"), request.json.get("description"))
     
-    return jsonify(group.__dict__), 201
+#     return jsonify(group.__dict__), 201
 
 @users_blueprint.get("/")
 def search_users(name: str):
