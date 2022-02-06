@@ -75,7 +75,7 @@ class Group:
         
         db.session.add(payment)
         db.session.commit()
-        print("PAYMENT!!!!!!!!!!!!!!!!!!!!!!!", payment, "PAYMENT!!!!!!!!!!!!!!!!!!!!!!!")
+
         return Group_Payment(payment)
     
     def add_member(self, name: str, email: str, phone_number: str) -> Group_Member:
@@ -98,3 +98,9 @@ class Group:
             raise Bad_Request(message, "Database error", pgcode=error.orig.pgcode) from error
         
         return Group_Member(member)
+    
+    def get_payment(self, id):
+        """Get payment"""
+        payment = Group_Payments.query.filter_by(group_id=self.id,id=id).first()
+
+        return Group_Payment(payment)
