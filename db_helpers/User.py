@@ -20,6 +20,7 @@ class User:
     name: str
     email: str
     phone_number: str
+    password: str
     groups: Any
     
     def __init__(self, user: Users):
@@ -123,6 +124,12 @@ class User:
         Users.query.filter_by(id=self.id).delete()
         db.session.commit()
     
+    def get_group(self, id):
+        """Get user's group"""
+        group = Groups.query.filter_by(user_id=self.id, id=id).first()
+        
+        return Group(group)
+        
     def make_group(self, name: str, description: str) -> Group:
         """Make a group"""
         group = Groups(
