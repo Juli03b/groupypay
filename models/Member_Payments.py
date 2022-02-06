@@ -20,8 +20,8 @@ class Member_Payments(BaseModel):
         primary_key=True
     )
 
-    amount: Decimal = db.Column(
-        db.Numeric(15, 6),
+    amount: str = db.Column(
+        db.String(),
         nullable=False
     )
     
