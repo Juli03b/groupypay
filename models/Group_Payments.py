@@ -39,7 +39,6 @@ class Group_Payments(BaseModel):
     
     # group = db.relationship("Groups", backref="group_payments", passive_deletes=True)
     member = db.relationship("Group_Members", backref="group_payment", passive_deletes=True)
-
     member_payments: List[Member_Payments] = db.relationship("Member_Payments", backref="group_members_payments", passive_deletes=True)
 
     def __repr__(self):
