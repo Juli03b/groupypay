@@ -10,8 +10,6 @@ from models.Group_Payments import Group_Payments
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 
-row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-
 @dataclass
 class Group:
     
@@ -20,8 +18,8 @@ class Group:
     user_id: int
     description: str
     created_on: str
-    members: Any
-    payments: Any
+    members: List[Group_Member]
+    payments: List[Group_Payment]
     
     """Class for logic abstraction from views"""
     
