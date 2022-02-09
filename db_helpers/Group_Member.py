@@ -1,14 +1,12 @@
 """Module for Group_Members model"""
 
-from typing import Any
+from typing import Any, List
 from models.Member_Payments import Member_Payments
 from db_helpers.Member_Payment import Member_Payment
 from exceptions.Bad_Request import Bad_Request
 from sqlalchemy.exc import IntegrityError
 from models.Group_Members import Group_Members, db
 from dataclasses import dataclass
-
-row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
 
 @dataclass
 class Group_Member:
@@ -19,7 +17,7 @@ class Group_Member:
     email: str
     phone_number: str
     added_on: str
-    payments: Any
+    payments: List[Member_Payment]
     
     """Class for logic abstraction from views"""
     
