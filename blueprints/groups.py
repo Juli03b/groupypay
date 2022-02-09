@@ -52,6 +52,7 @@ def make_group(email: str):
 
 @groups_blueprint.get("/<id>")
 def get_group(email, id: str):
+    """Get a group"""
     user = User.get_by_email(email)
     group = user.get_group(id)
     return jsonify(group)
@@ -60,6 +61,7 @@ def get_group(email, id: str):
 @require_same_id
 @groups_blueprint.patch("/<id>")
 def patch_group(id: str):
+    """Patch group"""
     if not request.json:
         raise Bad_Request("No name or description was provided")
     
