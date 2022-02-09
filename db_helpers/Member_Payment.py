@@ -16,6 +16,7 @@ class Member_Payment:
     paid_on: str
     paid: bool
     created_on: str
+    group_payment: any
     
     """Class for logic abstraction from views"""
     
@@ -27,6 +28,7 @@ class Member_Payment:
         self.paid = payment.paid
         self.created_on = payment.created_on
         self.key = (self.member_id, self.group_payment_id)
+        self.group_payment = payment.group_members_payments
 
     def __repr__(self) -> str:
         return f"<Member_Payment member_id={self.member_id} group_payment_id={self.group_payment_id} amount={self.amount} paid_on={self.paid_on} paid={self.paid} created_on={self.created_on}>"
