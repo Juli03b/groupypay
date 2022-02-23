@@ -2,15 +2,16 @@
 
 from typing import Any, List
 from flask_jwt_extended.utils import decode_token
+from db_helpers.Member_Payment import Member_Payment
 from exceptions.Unauthorized import Unauthorized
-from models.Groups import Groups
-from db_helpers.Group import Group
 from exceptions.Bad_Request import Bad_Request
-from sqlalchemy.exc import IntegrityError
+from models.Group_Members import Group_Members
+from models.Member_Payments import Member_Payments
+from models.Groups import Groups
 from models.Users import Users, db
+from db_helpers.Group import Group
+from sqlalchemy.exc import IntegrityError
 from dataclasses import dataclass
-
-row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
 
 @dataclass
 class User:
@@ -20,8 +21,8 @@ class User:
     name: str
     email: str
     phone_number: str
-    password: str
     groups: Any
+    owed_payments: Any
     
     def __init__(self, user: Users):
         self.id = user.id
@@ -30,7 +31,13 @@ class User:
         self.phone_number = user.phone_number
         self.password = user.password
         self.groups = [Group(group) for group in user.groups]
-        
+        owed_payments = db.session.query(Member_Payments).\
+            join(Group_Members, Member_Payments.member_id==Group_Members.id).\
+            group_by(Member_Payments).\
+            filter(Group_Members.email==user.email).\
+            all()
+        self.owed_payments = [Member_Payment(member_payment) for member_payment in owed_payments]
+                             
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email} name={self.name} phone_number={self.phone_number} groups={self.groups}>"
     
@@ -86,6 +93,7 @@ class User:
     def get_by_email(cls, email: str):
         """Return a user using an email"""
         user: Users = Users.query.filter_by(email=email).first()
+        
         if not user:
             raise Bad_Request(f"User with email {email} does not exist")
                 
@@ -124,18 +132,19 @@ class User:
         Users.query.filter_by(id=self.id).delete()
         db.session.commit()
     
-    def get_group(self, id):
+    def get_group(self, id, email:str or None, secret_code: str or None=None):
         """Get user's group"""
-        group = Groups.query.filter_by(user_id=self.id, id=id).first()
+        print("EMAIL!", email)
+        group: Group = Group.get_with_auth(id, email, secret_code)
+        return group
         
-        return Group(group)
-        
-    def make_group(self, name: str, description: str) -> Group:
+    def make_group(self, name: str, description: str, secret_code: int) -> Group:
         """Make a group"""
         group = Groups(
             user_id=self.id,
             name=name,
-            description=description
+            description=description,
+            secret_code=secret_code
         )
 
         db.session.add(group)

@@ -16,7 +16,6 @@ users_blueprint = Blueprint("users", __name__)
 def get_user(email: str):
     """Get user information"""
     user = User.get_by_email(email)
-    print("USSERUUSUUSUUSUSU!!!!!!", user, "USSERUUSUUSUUSUSU!!!!!!")
     return jsonify(user)
 
 @users_blueprint.patch("/<email>", strict_slashes=False)

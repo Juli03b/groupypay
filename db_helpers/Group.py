@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from typing import Any, List
+from models.Users import Users
 from models.Group_Members import Group_Members
 from db_helpers.Group_Member import Group_Member
 from db_helpers.Group_Payment import Group_Payment
@@ -18,6 +19,8 @@ class Group:
     user_id: int
     description: str
     created_on: str
+    secret_code: int
+    user: Users
     members: List[Group_Member]
     payments: List[Group_Payment]
     
@@ -29,11 +32,13 @@ class Group:
         self.user_id = group.user_id
         self.description = group.description
         self.created_on = group.created_on
+        self.secret_code = group.secret_code
+        self.user = group.user
         self.members: List[Group_Member] = {member.id: Group_Member(member) for member in group.members}
         self.payments: List[Group_Payments] = [Group_Payment(payment) for payment in group.payments] # instantiate to group payment helper first
     
     def __repr__(self) -> str:
-        return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on}>"
+        return f"<Group id={self.id} name={self.name} user_id={self.user_id} description={self.description} created_on={self.created_on} secret_code={self.secret_code}>"
     
     @classmethod
     def get_by_id(cls, id: int):
@@ -42,6 +47,27 @@ class Group:
         if not group:
             raise Bad_Request(f"Group with id {id} does not exist")
         return cls(group)
+    
+    @classmethod
+    def get_with_auth(cls, id: int, email: str or None, secret_code: str or None):
+        """Return a group using an id, ensuring that the secret code is credible or that the user's email is found in members'"""
+        group: Groups = Groups.query.filter_by(id=id).first()
+        
+        if not group:
+            raise Bad_Request(f"Group with id {id} does not exist")
+
+        if group.secret_code == secret_code or group.user.email == email:
+            print("SECRET  codee ", id)
+            return cls(group)
+        
+        member: Group_Members = Group_Members.query.filter_by(group_id=group.id, email=email).first()
+        
+        if member:
+            return cls(group)
+        
+        raise Bad_Request("Wrong secret code")
+        
+        
     
     def edit(self, name: str=None, description: str=None) -> None:
         """Edit group"""

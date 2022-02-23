@@ -1,6 +1,7 @@
 """Module for Group_Payments model"""
 
 from decimal import Decimal
+from typing import Any
 from db_helpers.Member_Payment import Member_Payment
 from models.Member_Payments import Member_Payments
 from exceptions.Bad_Request import Bad_Request
@@ -19,7 +20,7 @@ class Group_Payment:
     total_amount: float
     member_payments: Member_Payment
     created_on: str
-    member: int
+    member: Any
     
     """Class for logic abstraction from views"""
     

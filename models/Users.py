@@ -24,7 +24,7 @@ class Users(BaseModel):
         unique=True
     )
 
-    password: str = db.Column(
+    password = db.Column(
         db.String(),
         nullable=False
     )

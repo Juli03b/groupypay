@@ -1,3 +1,4 @@
+from sqlalchemy import null
 from models.Group_Members import Group_Members
 from models.Group_Payments import Group_Payments
 from models.main import db, BaseModel
@@ -14,6 +15,12 @@ class Groups(BaseModel):
         autoincrement=True,
         unique=True,
         index=True
+    )
+    
+    secret_code: int = db.Column(
+        db.String(100),
+        nullable=True,
+        default=None
     )
     
     user_id: int = db.Column(
@@ -36,7 +43,7 @@ class Groups(BaseModel):
         default=now()
     )
 
-    # user = db.relationship("Users", backref="group_user", passive_deletes=True)
+    user = db.relationship("Users", backref="group", passive_deletes=True)
     members: Group_Members = db.relationship("Group_Members", backref="group", passive_deletes=True)
     payments: Group_Payments = db.relationship("Group_Payments", backref="group")
     

@@ -37,6 +37,17 @@
             "examples": [
                 "WERE IN LA"
             ]
+        },
+        "secret_code": {
+            "$id": "#/properties/secret_code",
+            "type": "string",
+            "maxLength": 100,
+            "title": "Secret code",
+            "description": "Code!",
+            "default": null,
+            "examples": [
+                "2331"
+            ]
         }
     },
     "additionalProperties": true

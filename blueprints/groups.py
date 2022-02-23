@@ -13,6 +13,7 @@ from db_helpers.User import User
 from exceptions.Bad_Request import Bad_Request
 from db_helpers.Group import Group
 from db_helpers.Group_Member import Group_Member
+from flask_jwt_extended import get_jwt_identity, jwt_required, verify_jwt_in_request
 
 groups_blueprint = Blueprint("groups", __name__)
 
@@ -35,9 +36,9 @@ def require_same_id(f):
 # @require_same_user_as_email
 @groups_blueprint.get("/", strict_slashes=False)
 def get_groups(email: str):
-    """Get a group"""
+    """Get groups"""
     user = User.get_by_email(email)
-    print("GROUPS!!!!!!!!!!!!!!!!!", user.groups, "GROUPS!!!!!!!!!!!!!!!!!")
+
     return jsonify(user.groups), 200
 
 @groups_blueprint.post("/", strict_slashes=False)
@@ -45,21 +46,28 @@ def get_groups(email: str):
 def make_group(email: str):
     """Make a group"""
     validate_json(request.json, "group")
-    user = User.get_by_email(email)
-    group = user.make_group(request.json.get("name"), request.json.get("description"))
     
-    return jsonify(group.__dict__), 201
+    user = User.get_by_email(email)
+    group = user.make_group(request.json.get("name"), request.json.get("description"), request.json.get("secret_code"))
+    
+    return jsonify(group), 201
 
 @groups_blueprint.get("/<id>")
-def get_group(email, id: str):
+@jwt_required(optional=True)
+def get_group(email: str, id: str):
     """Get a group"""
+    current_user = get_jwt_identity()
     user = User.get_by_email(email)
-    group = user.get_group(id)
+    group = user.get_group(id, current_user.get("email") if current_user else None, request.args.get("secret_code"))
+    
+    if not group:
+        raise Bad_Request("Secret code is not correct")
+    
     return jsonify(group)
     
 # @require_token
-@require_same_id
 @groups_blueprint.patch("/<id>")
+@require_same_id
 def patch_group(id: str):
     """Patch group"""
     if not request.json:
@@ -85,13 +93,14 @@ def get_member(group_id: int, member_id: int):
 
     return jsonify(group_member.__dict__)
 
-# @require_token
-@require_same_id
 @groups_blueprint.post("/<group_id>/members")
+@jwt_required(optional=True)
 def add_member(email: str, group_id: int):
     validate_json(request.json, "group_member")
+    current_user = get_jwt_identity()
+
     user = User.get_by_email(email)
-    group = user.get_group(group_id)
+    group = user.get_group(group_id, current_user.get("email"))
     member = group.add_member(request.json.get("name"), request.json.get("email"), request.json.get("phone_number"))
     
     return jsonify(message="Successfully created group member", member=member.__dict__), 201
@@ -121,16 +130,15 @@ def get_group_payment(group_id: int, payment_id: int):
     group_payment.total_amount = str(group_payment.total_amount)
     return jsonify(group_payment)
 
-# @require_token
-@require_same_id
 @groups_blueprint.post("/<group_id>/payments")
+@jwt_required(optional=True)
 def add_group_payment(email, group_id: int):
     """Add group payment"""
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!", request.json, "!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     if not request.json or not request.json.get("name") or not  request.json.get("total_amount"):
         raise Bad_Request("Missing information")
+    current_user = get_jwt_identity()
     user = User.get_by_email(email)
-    group = user.get_group(group_id)
+    group = user.get_group(group_id, current_user.get("email"))
     group_payment = group.add_payment(request.json["name"], request.json["total_amount"], request.json["member_id"])
     
     group_payment.add_member_payments(request.json["member_payments"])
@@ -185,11 +193,14 @@ def make_member_payment(group_payment_id: int, member_id):
     return jsonify(member_payment=member_payment)
 
 @groups_blueprint.post("/<group_id>/payments/<group_payment_id>/member-payments/<member_id>/pay", strict_slashes=False)
+@jwt_required(optional=True)
 def pay_payment(email, group_id, group_payment_id: int, member_id):
     """Pay processes"""
     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", email, group_id, group_payment_id, member_id, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     user = User.get_by_email(email)
-    group = user.get_group(group_id)
+    current_user = get_jwt_identity()
+
+    group = user.get_group(group_id, current_user.get("email"))
     payment = group.get_payment(group_payment_id)
     
     member_payment = payment.get_member_payment(member_id)
